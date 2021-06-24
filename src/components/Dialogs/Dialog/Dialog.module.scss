@@ -1,0 +1,14 @@
+.dialogWrapper {
+  padding: 0 2em;
+  height: calc(100vh - 64px - 1em);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1em;
+}
+
+.dialogSendMessage {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}

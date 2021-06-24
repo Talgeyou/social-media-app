@@ -1,5 +1,6 @@
 import { List } from "antd";
 import Title from "antd/lib/typography/Title";
+import React from "react";
 import Message from "./Message/Message";
 import styles from "./Messages.module.scss";
 

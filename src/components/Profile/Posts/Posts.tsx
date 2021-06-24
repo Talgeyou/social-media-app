@@ -2,6 +2,7 @@ import { Avatar, Comment, List, Tooltip } from "antd";
 import Title from "antd/lib/typography/Title";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import styles from "./Posts.module.scss";
 
 export interface Post {
   id: number;
@@ -25,7 +26,7 @@ const Posts = (props: PostsProps) => {
         itemLayout="horizontal"
         dataSource={props.posts}
         renderItem={(post) => (
-          <li>
+          <li className={styles.comment}>
             <Comment
               author={
                 <Link to={`/profile/${post.author.id}`}>

@@ -2,7 +2,8 @@ import { Card, Layout, List } from "antd";
 import Title from "antd/lib/typography/Title";
 import { Link, Route } from "react-router-dom";
 import styles from "./Dialogs.module.scss";
-import Messages from "./Messages/Messages";
+import React from "react";
+import Dialog from "./Dialog/Dialog";
 
 export interface DialogsProps {
   dialogs?: Array<{
@@ -12,6 +13,7 @@ export interface DialogsProps {
       name: string;
       imgUrl?: string;
     };
+    newMessageText: string;
     messages?: Array<{
       id: number;
       author: {
@@ -22,6 +24,11 @@ export interface DialogsProps {
       body: string;
     }>;
   }>;
+  updateNewMessageText: (dialogId: number, messageText: string) => void;
+  sendMessage: (
+    dialogId: number,
+    author: { id: number; name: string; imgUrl?: string }
+  ) => void;
 }
 
 const Dialogs = (props: DialogsProps) => {
@@ -53,13 +60,13 @@ const Dialogs = (props: DialogsProps) => {
                 <Route
                   exact
                   path={`/dialogs/${dialog.user.id}`}
-                  render={() =>
-                    dialog.messages ? (
-                      <Messages messages={dialog.messages} />
-                    ) : (
-                      ""
-                    )
-                  }
+                  render={() => (
+                    <Dialog
+                      dialog={dialog}
+                      updateNewMessageText={props.updateNewMessageText}
+                      sendMessage={props.sendMessage}
+                    />
+                  )}
                 />
               );
             })}

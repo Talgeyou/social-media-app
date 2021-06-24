@@ -1,0 +1,12 @@
+.messagesWrapper {
+  padding: 0.5em;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: calc(100vh - 144px);
+}
+
+.title {
+  padding: 40% 0;
+}

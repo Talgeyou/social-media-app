@@ -16,11 +16,13 @@ export interface AppProps {
         description?: string;
         imgUrl?: string;
       };
+      newPostText: string;
       posts?: Array<Post>;
     }>;
     dialogs?: Array<{
       id: number;
       user: { id: number; name: string; imgUrl?: string };
+      newMessageText: string;
       messages: Array<{
         id: number;
         author: { id: number; name: string; imgUrl?: string };
@@ -28,6 +30,16 @@ export interface AppProps {
       }>;
     }>;
   };
+  onNewPostTextChange: (userId: number, postText: string) => void;
+  addPost: (
+    user: { id: number; name: string; imgUrl?: string },
+    postMessage: string
+  ) => void;
+  updateNewMessageText: (dialogId: number, messageText: string) => void;
+  sendMessage: (
+    dialogId: number,
+    author: { id: number; name: string; imgUrl?: string }
+  ) => void;
 }
 
 function App(props: AppProps) {
@@ -38,7 +50,7 @@ function App(props: AppProps) {
           <div className={styles.logo}>Samurai</div>
         </Header>
         <Layout>
-          <Sider width={200}>
+          <Sider theme="light" width={200}>
             <Menu mode="inline" defaultSelectedKeys={["profile"]}>
               <Menu.Item key="profile">
                 <Link to="/profile/0">Profile</Link>
@@ -52,11 +64,23 @@ function App(props: AppProps) {
             <Switch>
               <Route
                 path="/profile/:id"
-                render={() => <Profile profiles={props.state.profiles} />}
+                render={() => (
+                  <Profile
+                    profiles={props.state.profiles}
+                    onNewPostTextChange={props.onNewPostTextChange}
+                    addPost={props.addPost}
+                  />
+                )}
               />
               <Route
                 path="/dialogs"
-                render={() => <Dialogs dialogs={props.state.dialogs} />}
+                render={() => (
+                  <Dialogs
+                    dialogs={props.state.dialogs}
+                    updateNewMessageText={props.updateNewMessageText}
+                    sendMessage={props.sendMessage}
+                  />
+                )}
               />
             </Switch>
           </Content>

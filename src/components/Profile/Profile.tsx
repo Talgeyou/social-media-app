@@ -3,6 +3,9 @@ import Posts, { Post } from "./Posts/Posts";
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import styles from "./Profile.module.scss";
 import Title from "antd/lib/typography/Title";
+import React from "react";
+import TextArea from "antd/lib/input/TextArea";
+import { Button } from "antd";
 
 export interface ParamTypes {
   id: string | undefined;
@@ -16,25 +19,60 @@ export interface ProfileProps {
       description?: string;
       imgUrl?: string;
     };
+    newPostText: string;
     posts?: Array<Post>;
   }>;
+  onNewPostTextChange: (profileId: number, postText: string) => void;
+  addPost: (
+    user: { id: number; name: string; imgUrl?: string },
+    postText: string
+  ) => void;
 }
 
 const Profile = (props: ProfileProps) => {
   const { id } = useParams<ParamTypes>();
+
   if (id) {
-    const profile = props.profiles.find((profile) => profile.user.id === +id);
-    console.log([id, profile]);
+    const profile = id
+      ? props.profiles.find((profile) => profile.user.id === +id)
+      : undefined;
+
     if (profile) {
-      return (
-        <div className={styles.profile}>
-          <ProfileInfo user={profile.user} />
-          <Posts posts={profile.posts} />
-        </div>
-      );
+      const handleNewPostTextChange = (e: { target: { value: any } }) => {
+        debugger;
+        let postText = e.target.value;
+        props.onNewPostTextChange(profile.user.id, postText);
+      };
+
+      const addPost = () => {
+        let postText = profile.newPostText;
+        let user = {
+          id: 0,
+          name: "Talge",
+          imgUrl: "https://s.ppy.sh/a/9200248",
+        };
+        props.addPost(user, postText);
+      };
+      if (id && profile) {
+        return (
+          <div className={styles.profile}>
+            <ProfileInfo user={profile.user} />
+            <div className={styles.profileAddPost}>
+              <TextArea
+                rows={3}
+                value={profile.newPostText}
+                onChange={handleNewPostTextChange}
+              />
+              <Button type="primary" onClick={addPost}>
+                Add Post
+              </Button>
+            </div>
+            <Posts posts={profile.posts} />
+          </div>
+        );
+      }
     }
   }
-
   return <Title>There is no such user</Title>;
 };
 
