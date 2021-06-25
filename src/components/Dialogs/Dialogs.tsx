@@ -23,11 +23,7 @@ export interface DialogsProps {
       body: string;
     }>;
   }>;
-  updateNewMessageText: (dialogId: number, messageText: string) => void;
-  sendMessage: (
-    dialogId: number,
-    author: { id: number; name: string; imgUrl?: string }
-  ) => void;
+  dispatch(action: any): void;
 }
 
 const Dialogs = (props: DialogsProps) => {
@@ -57,14 +53,11 @@ const Dialogs = (props: DialogsProps) => {
             {props.dialogs.map((dialog) => {
               return (
                 <Route
+                  key={dialog.id}
                   exact
                   path={`/dialogs/${dialog.user.id}`}
                   render={() => (
-                    <Dialog
-                      dialog={dialog}
-                      updateNewMessageText={props.updateNewMessageText}
-                      sendMessage={props.sendMessage}
-                    />
+                    <Dialog dialog={dialog} dispatch={props.dispatch} />
                   )}
                 />
               );

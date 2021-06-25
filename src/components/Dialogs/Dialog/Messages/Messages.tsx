@@ -17,7 +17,6 @@ export interface MessagesProps {
 }
 
 const Messages = (props: MessagesProps) => {
-  console.log(props.messages);
   if (props.messages.length > 0)
     return (
       <List

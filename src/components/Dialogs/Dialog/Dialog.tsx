@@ -1,5 +1,8 @@
 import { Button, Input } from "antd";
-import React from "react";
+import {
+  sendMessageActionCreator,
+  updateNewMessageTextActionCreator,
+} from "../../../redux/dialogsReducer";
 import styles from "./Dialog.module.scss";
 import Messages from "./Messages/Messages";
 
@@ -22,21 +25,21 @@ export interface DialogProps {
       body: string;
     }>;
   };
-  updateNewMessageText: (dialogId: number, messageText: string) => void;
-  sendMessage: (
-    dialogId: number,
-    author: { id: number; name: string; imgUrl?: string }
-  ) => void;
+  dispatch(action: any): void;
 }
 
 const Dialog = (props: DialogProps) => {
   const handleNewMessageTextChange = (e: { target: { value: string } }) => {
-    props.updateNewMessageText(props.dialog.id, e.target.value);
+    // props.updateNewMessageText(props.dialog.id, e.target.value);
+    props.dispatch(
+      updateNewMessageTextActionCreator(props.dialog.id, e.target.value)
+    );
   };
 
   const handleSendButtonClick = () => {
     let author = { id: 0, name: "Talge", imgUrl: "https://s.ppy.sh/a/9200248" };
-    props.sendMessage(props.dialog.id, author);
+    // props.sendMessage(props.dialog.id, author);
+    props.dispatch(sendMessageActionCreator(props.dialog.id, author));
   };
 
   return (
