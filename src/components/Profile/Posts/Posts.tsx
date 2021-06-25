@@ -7,14 +7,14 @@ import styles from "./Posts.module.scss";
 export interface PostsProps {
   posts: Array<any>;
   newPostText: string;
-  onUpdateNewPostText: (postText: string) => void;
+  onNewPostTextChange: (postText: string) => void;
   onAddPost: (author: { id: number; name: string; imgUrl?: string }) => void;
 }
 
 const Posts = (props: PostsProps) => {
   const handleNewPostTextChange = (e: { target: { value: any } }) => {
     let postText = e.target.value;
-    props.onUpdateNewPostText(postText);
+    props.onNewPostTextChange(postText);
   };
 
   const addPost = () => {

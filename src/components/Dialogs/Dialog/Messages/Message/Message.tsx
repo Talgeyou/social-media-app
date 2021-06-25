@@ -3,15 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./Message.module.scss";
 
 export interface MessageProps {
-  message: {
-    id: number;
-    author: {
-      id: number;
-      name: string;
-      imgUrl?: string;
-    };
-    body: string;
-  };
+  message: any;
 }
 
 const Message = (props: MessageProps) => {

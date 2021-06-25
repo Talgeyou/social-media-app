@@ -13,16 +13,12 @@ export interface PostsContainerProps {
 
 const PostsContainer = (props: PostsContainerProps) => {
   const handlePostChange = (postText: string) => {
-    let action = updateNewPostTextActionCreator(props.profileId, postText);
+    const action = updateNewPostTextActionCreator(props.profileId, postText);
     props.dispatch(action);
   };
 
-  const handlePostAdd = (author: {
-    id: number;
-    name: string;
-    imgUrl?: string;
-  }) => {
-    let action = addPostActionCreator(props.profileId, author);
+  const handlePostAdd = (author: any) => {
+    const action = addPostActionCreator(props.profileId, author);
     props.dispatch(action);
   };
 
@@ -30,7 +26,7 @@ const PostsContainer = (props: PostsContainerProps) => {
     <Posts
       newPostText={props.newPostText}
       posts={props.posts}
-      onUpdateNewPostText={handlePostChange}
+      onNewPostTextChange={handlePostChange}
       onAddPost={handlePostAdd}
     />
   );

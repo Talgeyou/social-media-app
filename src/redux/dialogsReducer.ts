@@ -73,8 +73,8 @@ const dialogsReducer = (state: Array<Dialog> = initialState, action: any) => {
           author: action.author,
           body: dialog.newMessageText,
         };
-        dialog.messages.push(newMessage);
         dialog.newMessageText = "";
+        dialog.messages.push(newMessage);
       }
       return state;
     case updateNewMessageTextActionType:

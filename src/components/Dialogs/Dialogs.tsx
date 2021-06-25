@@ -2,27 +2,10 @@ import { Card, Layout, List } from "antd";
 import Title from "antd/lib/typography/Title";
 import { Link, Route } from "react-router-dom";
 import styles from "./Dialogs.module.scss";
-import Dialog from "./Dialog/Dialog";
+import DialogContainer from "./Dialog/DialogContainer";
 
 export interface DialogsProps {
-  dialogs?: Array<{
-    id: number;
-    user: {
-      id: number;
-      name: string;
-      imgUrl?: string;
-    };
-    newMessageText: string;
-    messages?: Array<{
-      id: number;
-      author: {
-        id: number;
-        name: string;
-        imgUrl?: string;
-      };
-      body: string;
-    }>;
-  }>;
+  dialogs: Array<any>;
   dispatch(action: any): void;
 }
 
@@ -37,11 +20,11 @@ const Dialogs = (props: DialogsProps) => {
             dataSource={props.dialogs}
             renderItem={(dialog) => {
               return (
-                <Link key={dialog.id} to={`/dialogs/${dialog.user.id}`}>
+                <Link key={dialog.id} to={`/dialogs/${dialog.id}`}>
                   <List.Item>
                     <Card title={dialog.user.name}>
                       {dialog.messages && dialog.messages.length > 0
-                        ? dialog.messages[0].body
+                        ? dialog.messages[dialog.messages.length - 1].body
                         : ""}
                     </Card>
                   </List.Item>
@@ -52,14 +35,13 @@ const Dialogs = (props: DialogsProps) => {
           <div>
             {props.dialogs.map((dialog) => {
               return (
-                <Route
-                  key={dialog.id}
-                  exact
-                  path={`/dialogs/${dialog.user.id}`}
-                  render={() => (
-                    <Dialog dialog={dialog} dispatch={props.dispatch} />
-                  )}
-                />
+                <Route path={`/dialogs/${dialog.id}`}>
+                  <DialogContainer
+                    key={dialog.id}
+                    dialog={dialog}
+                    dispatch={props.dispatch}
+                  />
+                </Route>
               );
             })}
           </div>

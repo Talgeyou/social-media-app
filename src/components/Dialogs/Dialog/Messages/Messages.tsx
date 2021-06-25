@@ -5,15 +5,7 @@ import Message from "./Message/Message";
 import styles from "./Messages.module.scss";
 
 export interface MessagesProps {
-  messages: Array<{
-    id: number;
-    author: {
-      id: number;
-      name: string;
-      imgUrl?: string;
-    };
-    body: string;
-  }>;
+  messages: Array<any>;
 }
 
 const Messages = (props: MessagesProps) => {
