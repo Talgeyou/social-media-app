@@ -1,5 +1,3 @@
-import { Dialog, Message } from "./store";
-
 export const sendMessageActionType = "SEND-MESSAGE";
 export const updateNewMessageTextActionType = "UPDATE-NEW-MESSAGE-TEXT";
 
@@ -62,13 +60,13 @@ const initialState = [
   },
 ];
 
-const dialogsReducer = (state: Array<Dialog> = initialState, action: any) => {
-  let dialog: Dialog | undefined;
+const dialogsReducer = (state: Array<any> = initialState, action: any) => {
+  let dialog: any | undefined;
   switch (action.type) {
     case sendMessageActionType:
-      dialog = state.find((dialog: Dialog) => dialog.id === action.dialogId);
+      dialog = state.find((d: any) => d.id === action.dialogId);
       if (dialog && dialog.newMessageText.length > 0) {
-        let newMessage: Message = {
+        let newMessage: any = {
           id: dialog.messages.length,
           author: action.author,
           body: dialog.newMessageText,
@@ -76,16 +74,15 @@ const dialogsReducer = (state: Array<Dialog> = initialState, action: any) => {
         dialog.newMessageText = "";
         dialog.messages.push(newMessage);
       }
-      return state;
+      break;
     case updateNewMessageTextActionType:
-      dialog = state.find((dialog) => dialog.id === action.dialogId);
+      dialog = state.find((d) => d.id === action.dialogId);
       if (dialog) {
         dialog.newMessageText = action.messageText;
       }
-      return state;
-    default:
-      return state;
+      break;
   }
+  return state;
 };
 
 export default dialogsReducer;

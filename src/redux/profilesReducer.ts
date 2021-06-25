@@ -1,5 +1,4 @@
 import moment from "moment";
-import { Post, Profile } from "./store";
 
 export const addPostActionType = "ADD-POST";
 export const updateNewPostTextActionType = "UPDATE-NEW-POST-TEXT";
@@ -69,15 +68,13 @@ const initialState = [
   },
 ];
 
-const profilesReducer = (state: Array<Profile> = initialState, action: any) => {
-  let profile: Profile | undefined;
+const profilesReducer = (state: Array<any> = initialState, action: any) => {
+  let profile;
   switch (action.type) {
     case addPostActionType:
-      profile = state.find(
-        (profile: Profile) => profile.user.id === action.profileId
-      );
+      profile = state.find((p) => p.user.id === action.profileId);
       if (profile && profile.newPostText.length > 0) {
-        let newPost: Post = {
+        let newPost = {
           id: profile.posts.length,
           author: action.author,
           body: profile.newPostText,
@@ -86,18 +83,15 @@ const profilesReducer = (state: Array<Profile> = initialState, action: any) => {
         profile.posts.push(newPost);
         profile.newPostText = "";
       }
-      return state;
+      break;
     case updateNewPostTextActionType:
-      profile = state.find(
-        (profile: Profile) => profile.user.id === action.profileId
-      );
+      profile = state.find((p) => p.user.id === action.profileId);
       if (profile) {
         profile.newPostText = action.postText;
       }
-      return state;
-    default:
-      return state;
+      break;
   }
+  return state;
 };
 
 export default profilesReducer;
