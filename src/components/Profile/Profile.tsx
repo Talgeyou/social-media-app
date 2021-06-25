@@ -18,7 +18,6 @@ const Profile = (props: ProfileProps) => {
 
   if (id) {
     const profile = props.profiles.find((p: any) => p.user.id === +id);
-    const posts = profile.posts.reverse();
 
     if (profile) {
       return (
@@ -26,7 +25,7 @@ const Profile = (props: ProfileProps) => {
           <ProfileInfo user={profile.user} />
           <PostsContainer
             profileId={profile.user.id}
-            posts={posts}
+            posts={profile.posts}
             newPostText={profile.newPostText}
             dispatch={props.dispatch}
           />
