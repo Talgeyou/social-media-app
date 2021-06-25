@@ -17,9 +17,8 @@ const Profile = (props: ProfileProps) => {
   const { id } = useParams<ParamTypes>();
 
   if (id) {
-    const profile = props.profiles.find(
-      (profile: any) => profile.user.id === +id
-    );
+    const profile = props.profiles.find((p: any) => p.user.id === +id);
+    const posts = profile.posts.reverse();
 
     if (profile) {
       return (
@@ -27,7 +26,7 @@ const Profile = (props: ProfileProps) => {
           <ProfileInfo user={profile.user} />
           <PostsContainer
             profileId={profile.user.id}
-            posts={profile.posts}
+            posts={posts}
             newPostText={profile.newPostText}
             dispatch={props.dispatch}
           />
