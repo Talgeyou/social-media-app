@@ -3,7 +3,6 @@ import Posts, { Post } from "./Posts/Posts";
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import styles from "./Profile.module.scss";
 import Title from "antd/lib/typography/Title";
-import React from "react";
 import TextArea from "antd/lib/input/TextArea";
 import { Button } from "antd";
 
@@ -24,8 +23,8 @@ export interface ProfileProps {
   }>;
   onNewPostTextChange: (profileId: number, postText: string) => void;
   addPost: (
-    user: { id: number; name: string; imgUrl?: string },
-    postText: string
+    profileId: number,
+    author: { id: number; name: string; imgUrl?: string }
   ) => void;
 }
 
@@ -39,19 +38,17 @@ const Profile = (props: ProfileProps) => {
 
     if (profile) {
       const handleNewPostTextChange = (e: { target: { value: any } }) => {
-        debugger;
         let postText = e.target.value;
         props.onNewPostTextChange(profile.user.id, postText);
       };
 
       const addPost = () => {
-        let postText = profile.newPostText;
         let user = {
           id: 0,
           name: "Talge",
           imgUrl: "https://s.ppy.sh/a/9200248",
         };
-        props.addPost(user, postText);
+        props.addPost(profile.user.id, user);
       };
       if (id && profile) {
         return (

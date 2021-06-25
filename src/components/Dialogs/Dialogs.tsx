@@ -2,7 +2,6 @@ import { Card, Layout, List } from "antd";
 import Title from "antd/lib/typography/Title";
 import { Link, Route } from "react-router-dom";
 import styles from "./Dialogs.module.scss";
-import React from "react";
 import Dialog from "./Dialog/Dialog";
 
 export interface DialogsProps {
@@ -42,7 +41,7 @@ const Dialogs = (props: DialogsProps) => {
             dataSource={props.dialogs}
             renderItem={(dialog) => {
               return (
-                <Link to={`/dialogs/${dialog.user.id}`}>
+                <Link key={dialog.id} to={`/dialogs/${dialog.user.id}`}>
                   <List.Item>
                     <Card title={dialog.user.name}>
                       {dialog.messages && dialog.messages.length > 0

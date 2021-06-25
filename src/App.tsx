@@ -30,10 +30,10 @@ export interface AppProps {
       }>;
     }>;
   };
-  onNewPostTextChange: (userId: number, postText: string) => void;
+  onNewPostTextChange: (profileId: number, postText: string) => void;
   addPost: (
-    user: { id: number; name: string; imgUrl?: string },
-    postMessage: string
+    profileId: number,
+    author: { id: number; name: string; imgUrl?: string }
   ) => void;
   updateNewMessageText: (dialogId: number, messageText: string) => void;
   sendMessage: (
