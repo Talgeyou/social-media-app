@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import {
@@ -9,9 +8,11 @@ import {
   setTotalUsersCount,
   setUsers,
   unfollow,
+  setFollowingInProgress,
 } from "../../redux/usersReducer";
 import Users from "./Users";
 import Preloader from "../common/Preloader";
+import { UsersAPI } from "../../api/api";
 
 interface UsersContainerComponentProps {
   users: Array<any>;
@@ -19,6 +20,7 @@ interface UsersContainerComponentProps {
   pageSize: number;
   currentPage: number;
   isFetching: boolean;
+  followingInProgress: Array<number>;
   setUsers: (users: Array<any>) => void;
   follow: (userId: number) => void;
   unfollow: (userId: number) => void;
@@ -26,23 +28,22 @@ interface UsersContainerComponentProps {
   setTotalUsersCount: (totalCount: number) => void;
   setPageSize: (pageSize: number) => void;
   setIsFetching: (status: boolean) => void;
+  setFollowingInProgress: (userId: number, isFetching: boolean) => void;
 }
 
 const UsersContainerComponent = (props: UsersContainerComponentProps) => {
   useEffect(() => {
-    if (props.users.length < 1) {
+    if (props.users && props.users.length < 1) {
       if (!props.isFetching) {
         props.setIsFetching(true);
-        axios
-          .get(
-            `https://social-network.samuraijs.com/api/1.0/users?page=${props.currentPage}&count=${props.pageSize}`
-          )
-          .then((res: any) => {
-            props.setUsers(res.data.items);
-            props.setTotalUsersCount(res.data.totalCount);
-            props.setCurrentPage(1);
+        UsersAPI.getUsers(props.currentPage, props.pageSize).then(
+          (data: any) => {
             props.setIsFetching(false);
-          });
+            props.setUsers(data.items);
+            props.setTotalUsersCount(data.totalCount);
+            props.setCurrentPage(1);
+          }
+        );
       }
     }
   });
@@ -50,19 +51,17 @@ const UsersContainerComponent = (props: UsersContainerComponentProps) => {
   const handleChangePage = (pageNumber: number, pageSize?: number) => {
     if (!props.isFetching) {
       props.setIsFetching(true);
-      axios
-        .get(
-          `https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${props.pageSize}`
-        )
-        .then((res: any) => {
+      UsersAPI.getUsers(pageNumber, pageSize ? pageSize : props.pageSize).then(
+        (data: any) => {
+          props.setIsFetching(false);
           if (pageSize) {
             props.setPageSize(pageSize);
           }
-          props.setTotalUsersCount(res.data.totalCount);
+          props.setTotalUsersCount(data.totalCount);
           props.setCurrentPage(pageNumber);
-          props.setUsers(res.data.items);
-          props.setIsFetching(false);
-        });
+          props.setUsers(data.items);
+        }
+      );
     }
   };
 
@@ -72,9 +71,12 @@ const UsersContainerComponent = (props: UsersContainerComponentProps) => {
       totalCount={props.totalCount}
       pageSize={props.pageSize}
       currentPage={props.currentPage}
+      isFetching={props.isFetching}
+      followingInProgress={props.followingInProgress}
       unfollow={props.unfollow}
       follow={props.follow}
       changePage={handleChangePage}
+      setFollowingInProgress={props.setFollowingInProgress}
     >
       {props.isFetching ? <Preloader /> : ""}
     </Users>
@@ -88,6 +90,7 @@ const mapStateToProps = (state: any) => {
     totalCount: state.users.totalCount,
     currentPage: state.users.currentPage,
     isFetching: state.users.isFetching,
+    followingInProgress: state.users.followingInProgress,
   };
 };
 
@@ -99,4 +102,5 @@ export default connect(mapStateToProps, {
   setTotalUsersCount,
   setPageSize,
   setIsFetching,
+  setFollowingInProgress,
 })(UsersContainerComponent);

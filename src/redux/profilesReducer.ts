@@ -1,5 +1,3 @@
-import moment from "moment";
-
 export const addPostActionType = "ADD-POST";
 export const updateNewPostTextActionType = "UPDATE-NEW-POST-TEXT";
 const SET_USER_PROFILE = "SET_USER_PROFILE";

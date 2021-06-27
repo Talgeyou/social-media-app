@@ -2,19 +2,36 @@ import styles from "./User.module.scss";
 import { Avatar, Button, Card } from "antd";
 import { Typography } from "antd";
 import { NavLink } from "react-router-dom";
+import { FollowAPI } from "../../../api/api";
 const { Title } = Typography;
 
 export interface UserProps {
   user: any;
+  followingInProgress: Array<number>;
   onFollow: (userId: number) => void;
   onUnfollow: (userId: number) => void;
+  setFollowingInProgress: (userId: number, isFetching: boolean) => void;
 }
 
 const User = (props: UserProps) => {
   const handleFollowButtonClick = () => {
-    props.user.followed
-      ? props.onUnfollow(props.user.id)
-      : props.onFollow(props.user.id);
+    if (props.user.followed) {
+      props.setFollowingInProgress(props.user.id, true);
+      FollowAPI.deleteFollow(props.user.id).then((data: any) => {
+        props.setFollowingInProgress(props.user.id, false);
+        if (data && data.resultCode === 0) {
+          props.onUnfollow(props.user.id);
+        }
+      });
+    } else {
+      props.setFollowingInProgress(props.user.id, true);
+      FollowAPI.postFollow(props.user.id).then((data: any) => {
+        props.setFollowingInProgress(props.user.id, false);
+        if (data && data.resultCode === 0) {
+          props.onFollow(props.user.id);
+        }
+      });
+    }
   };
 
   return (
@@ -22,7 +39,12 @@ const User = (props: UserProps) => {
       style={{ width: 300 }}
       actions={[
         <Button
-          type={props.user.followed ? "default" : "primary"}
+          disabled={
+            props.followingInProgress.find((id) => id === props.user.id)
+              ? true
+              : false
+          }
+          type={props.user.followed ? "ghost" : "primary"}
           onClick={handleFollowButtonClick}
         >
           {props.user.followed ? "Unfollow" : "Follow"}
@@ -39,16 +61,6 @@ const User = (props: UserProps) => {
           <div className={styles.name}>{props.user.name}</div>
         </NavLink>
       }
-      //   extra={
-      //     <div className={styles.location}>
-      //       <div className={styles.location__city}>
-      //         {props.user.location.city}
-      //       </div>
-      //       <div className={styles.location__country}>
-      //         {props.user.location.country}
-      //       </div>
-      //     </div>
-      //   }
     >
       <Card.Meta
         description={

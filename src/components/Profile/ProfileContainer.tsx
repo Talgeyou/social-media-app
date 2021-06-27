@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { connect } from "react-redux";
+import { ProfileAPI } from "../../api/api";
 import { setUserProfile, setIsFetching } from "../../redux/profilesReducer";
 import Preloader from "../common/Preloader";
 import Profile from "./Profile";
@@ -25,12 +25,10 @@ const ProfileContainer = (props: ProfileContainerProps) => {
         : true;
       if (shouldFetch) {
         props.setIsFetching(true);
-        axios
-          .get(`https://social-network.samuraijs.com/api/1.0/profile/${id}`)
-          .then((res: any) => {
-            props.setUserProfile(res.data);
-            props.setIsFetching(false);
-          });
+        ProfileAPI.getProfile(id).then((data: any) => {
+          props.setUserProfile(data);
+          props.setIsFetching(false);
+        });
       }
     }
   });
