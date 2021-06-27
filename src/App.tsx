@@ -3,13 +3,11 @@ import Layout, { Content, Header } from "antd/lib/layout/layout";
 import Sider from "antd/lib/layout/Sider";
 import { Menu } from "antd";
 import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
-import Profile from "./components/Profile/Profile";
-import Dialogs from "./components/Dialogs/Dialogs";
+import ProfileContainer from "./components/Profile/ProfileContainer";
+import DialogsContainer from "./components/Dialogs/DialogsContainer";
+import UsersContainer from "./components/Users/UsersContainer";
 
-export interface AppProps {
-  state: any;
-  dispatch(action: any): void;
-}
+export interface AppProps {}
 
 function App(props: AppProps) {
   return (
@@ -27,28 +25,16 @@ function App(props: AppProps) {
               <Menu.Item key="messages">
                 <Link to="/dialogs">Messages</Link>
               </Menu.Item>
+              <Menu.Item key="users">
+                <Link to="/users">Find Users</Link>
+              </Menu.Item>
             </Menu>
           </Sider>
           <Content>
             <Switch>
-              <Route
-                path="/profile/:id"
-                render={() => (
-                  <Profile
-                    profiles={props.state.profiles}
-                    dispatch={props.dispatch}
-                  />
-                )}
-              />
-              <Route
-                path="/dialogs"
-                render={() => (
-                  <Dialogs
-                    dialogs={props.state.dialogs}
-                    dispatch={props.dispatch}
-                  />
-                )}
-              />
+              <Route path="/profile/:id" component={ProfileContainer} />
+              <Route path="/dialogs/" component={DialogsContainer} />
+              <Route path="/users" component={UsersContainer} />
             </Switch>
           </Content>
         </Layout>

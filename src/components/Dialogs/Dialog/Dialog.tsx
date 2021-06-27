@@ -1,6 +1,6 @@
 import { Button, Input } from "antd";
 import styles from "./Dialog.module.scss";
-import Messages from "./Messages/Messages";
+import MessagesContainer from "./Messages/MessagesContainer";
 
 export interface DialogProps {
   messages: Array<any>;
@@ -14,24 +14,16 @@ const Dialog = (props: DialogProps) => {
     props.onNewMessageTextChange(e.target.value);
   };
 
-  const handleSendMessageButtonClick = () => {
-    props.onSendMessageButtonClick();
-  };
-
   return (
     <div className={styles.dialogWrapper}>
-      {props.messages && props.messages.length > 0 ? (
-        <Messages messages={props.messages} />
-      ) : (
-        ""
-      )}
+      <MessagesContainer messages={props.messages} />
       <div className={styles.dialogSendMessage}>
         <Input.TextArea
           rows={4}
           onChange={handleNewMessageTextChange}
           value={props.newMessageText}
         />
-        <Button type="primary" onClick={handleSendMessageButtonClick}>
+        <Button type="primary" onClick={props.onSendMessageButtonClick}>
           Send
         </Button>
       </div>

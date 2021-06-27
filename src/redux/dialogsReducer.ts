@@ -58,6 +58,15 @@ const initialState = [
       },
     ],
   },
+  {
+    id: 2,
+    user: {
+      id: 3,
+      name: "Gaben",
+    },
+    newMessageText: "",
+    messages: [],
+  },
 ];
 
 const dialogsReducer = (state: Array<any> = initialState, action: any) => {

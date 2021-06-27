@@ -2,96 +2,50 @@ import moment from "moment";
 
 export const addPostActionType = "ADD-POST";
 export const updateNewPostTextActionType = "UPDATE-NEW-POST-TEXT";
+const SET_USER_PROFILE = "SET_USER_PROFILE";
+const SET_IS_FETCHING = "SET_IS_FETCHING";
 
-const initialState = [
-  {
-    user: {
-      id: 0,
-      name: "Talge",
-      description: "Hi, I'm React Frontend Developer",
-      imgUrl: "https://s.ppy.sh/a/9200248",
-    },
-    newPostText: "",
-    posts: [
-      {
-        id: 0,
-        author: {
-          id: 0,
-          name: "Talge",
-          imgUrl: "https://s.ppy.sh/a/9200248",
-        },
-        body: "This is my first post :3",
-        creationDate: moment().format("YYYY-MM-DD HH:mm:ss"),
-      },
-      {
-        id: 1,
-        author: {
-          id: 0,
-          name: "Talge",
-          imgUrl: "https://s.ppy.sh/a/9200248",
-        },
-        body: "Hey, there :)",
-        creationDate: moment().format("YYYY-MM-DD HH:mm:ss"),
-      },
-    ],
-  },
-  {
-    user: {
-      id: 1,
-      name: "RAGEEXE",
-      description: "BANDA CREEPS",
-      imgUrl: "https://s.ppy.sh/a/7417358",
-    },
-    newPostText: "",
-    posts: [
-      {
-        id: 0,
-        author: {
-          id: 1,
-          name: "RAGEEXE",
-          imgUrl: "https://s.ppy.sh/a/7417358",
-        },
-        body: "This is my first post :3",
-        creationDate: moment().format("YYYY-MM-DD HH:mm:ss"),
-      },
-      {
-        id: 1,
-        author: {
-          id: 1,
-          name: "RAGEEXE",
-          imgUrl: "https://s.ppy.sh/a/7417358",
-        },
-        body: "Hey, there :)",
-        creationDate: moment().format("YYYY-MM-DD HH:mm:ss"),
-      },
-    ],
-  },
-];
+interface Profile {
+  userId: number;
+  lookingForAJob: boolean;
+  lookingForAJobDescription: string | null;
+  fullName: string;
+  contacts: {
+    github: string | null;
+    vk: string | null;
+    facebook: string | null;
+    instagram: string | null;
+    twitter: string | null;
+    website: string | null;
+    youtube: string | null;
+    mainLink: string | null;
+  };
+  photos: {
+    small: string | null;
+    large: string | null;
+  };
+  aboutMe: string | null;
+}
 
-const profilesReducer = (state: Array<any> = initialState, action: any) => {
-  let profile;
+interface ProfileState {
+  profile: Profile | null;
+  isFetching: boolean;
+}
+
+const initialState: ProfileState = {
+  profile: null,
+  isFetching: false,
+};
+
+const profilesReducer = (state: ProfileState = initialState, action: any) => {
   switch (action.type) {
-    case addPostActionType:
-      profile = state.find((p) => p.user.id === action.profileId);
-      if (profile && profile.newPostText.length > 0) {
-        let newPost = {
-          id: profile.posts.length,
-          author: action.author,
-          body: profile.newPostText,
-          creationDate: moment().format("YYYY-MM-DD HH:mm:ss"),
-        };
-        profile.posts.push(newPost);
-        profile.newPostText = "";
-      }
-      break;
-    case updateNewPostTextActionType:
-      profile = state.find((p) => p.user.id === action.profileId);
-      if (profile) {
-        profile.newPostText = action.postText;
-      }
-      break;
+    case SET_USER_PROFILE:
+      return { ...state, profile: { ...action.profile } };
+    case SET_IS_FETCHING:
+      return { ...state, isFetching: action.status };
+    default:
+      return state;
   }
-  return state;
 };
 
 export default profilesReducer;
@@ -116,4 +70,14 @@ export const updateNewPostTextActionCreator = (
   type: updateNewPostTextActionType,
   profileId: profileId,
   postText: postText,
+});
+
+export const setUserProfile = (profile: number) => ({
+  type: SET_USER_PROFILE,
+  profile,
+});
+
+export const setIsFetching = (status: boolean) => ({
+  type: SET_IS_FETCHING,
+  status,
 });

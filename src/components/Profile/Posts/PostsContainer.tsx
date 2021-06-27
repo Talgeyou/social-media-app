@@ -5,27 +5,25 @@ import {
 import Posts from "./Posts";
 
 export interface PostsContainerProps {
-  profileId: number;
-  newPostText: string;
-  posts: Array<any>;
-  dispatch: (action: any) => void;
+  profile: any;
+  dispatch: any;
 }
 
 const PostsContainer = (props: PostsContainerProps) => {
   const handlePostChange = (postText: string) => {
-    const action = updateNewPostTextActionCreator(props.profileId, postText);
+    const action = updateNewPostTextActionCreator(props.profile.id, postText);
     props.dispatch(action);
   };
 
   const handlePostAdd = (author: any) => {
-    const action = addPostActionCreator(props.profileId, author);
+    const action = addPostActionCreator(props.profile.id, author);
     props.dispatch(action);
   };
 
   return (
     <Posts
-      newPostText={props.newPostText}
-      posts={props.posts}
+      newPostText={props.profile.newPostText}
+      posts={props.profile.posts}
       onNewPostTextChange={handlePostChange}
       onAddPost={handlePostAdd}
     />

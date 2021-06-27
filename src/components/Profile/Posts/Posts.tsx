@@ -33,6 +33,7 @@ const Posts = (props: PostsProps) => {
           <TextArea
             rows={3}
             value={props.newPostText}
+            placeholder={"Enter post's text"}
             onChange={handleNewPostTextChange}
           />
           <Button type="primary" onClick={addPost}>
