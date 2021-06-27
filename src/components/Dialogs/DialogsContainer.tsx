@@ -1,28 +1,19 @@
 import { connect } from "react-redux";
+
+import React, { Component } from "react";
 import Dialogs from "./Dialogs";
 
-// const DialogsContainer = () => {
-//   return (
-//     <StoreContext.Consumer>
-//       {(store) => {
-//         const dialogs = store.getState().dialogs;
-
-//         return dialogs ? (
-//           <Dialogs dialogs={dialogs} />
-//         ) : (
-//           <Title>There are no dialogs</Title>
-//         );
-//       }}
-//     </StoreContext.Consumer>
-//   );
-// };
+class DialogsContainer extends Component<any> {
+  render() {
+    return <Dialogs isAuth={this.props.isAuth} dialogs={this.props.dialogs} />;
+  }
+}
 
 const mapStateToProps = (state: any) => {
   return {
     dialogs: state.dialogs,
+    isAuth: state.auth.isAuth,
   };
 };
 
-const DialogsContainer = connect(mapStateToProps)(Dialogs);
-
-export default DialogsContainer;
+export default connect(mapStateToProps)(DialogsContainer);

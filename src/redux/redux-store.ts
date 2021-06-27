@@ -7,7 +7,7 @@ import thunkMiddleware from "redux-thunk";
 
 let reducers = combineReducers({
   profilePage: profilesReducer,
-  dialogs: dialogsReducer,
+  dialogsPage: dialogsReducer,
   users: usersReducer,
   auth: authReducer,
 });

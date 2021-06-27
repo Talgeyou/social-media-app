@@ -1,14 +1,18 @@
 import { Card, Layout, List } from "antd";
-import { Link, Route } from "react-router-dom";
+import { Link, Redirect, Route } from "react-router-dom";
 import styles from "./Dialogs.module.scss";
 import DialogContainer from "./Dialog/DialogContainer";
 
 export interface DialogsProps {
   dialogs: Array<any>;
-  dispatch: (action: any) => void;
+  isAuth: boolean;
 }
 
 const Dialogs = (props: DialogsProps) => {
+  if (!props.isAuth) {
+    return <Redirect to={"/login"} />;
+  }
+
   return (
     <Layout>
       <div className={styles.dialogsWrapper}>

@@ -6,6 +6,7 @@ import DialogsContainer from "./components/Dialogs/DialogsContainer";
 import UsersContainer from "./components/Users/UsersContainer";
 import HeaderContainer from "./components/common/Header/HeaderContainer";
 import NavigationContainer from "./components/common/Navigation/NavigationContainer";
+import Login from "./components/Login/Login";
 
 export interface AppProps {}
 
@@ -21,6 +22,7 @@ function App(_props: AppProps) {
               <Route path="/profile/:id" component={ProfileContainer} />
               <Route path="/dialogs/" component={DialogsContainer} />
               <Route path="/users" component={UsersContainer} />
+              <Route path="/login" component={Login} />
             </Switch>
           </Layout.Content>
         </Layout>
