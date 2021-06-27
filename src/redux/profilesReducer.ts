@@ -1,3 +1,5 @@
+import { ProfileAPI } from "../api/api";
+
 export const addPostActionType = "ADD-POST";
 export const updateNewPostTextActionType = "UPDATE-NEW-POST-TEXT";
 const SET_USER_PROFILE = "SET_USER_PROFILE";
@@ -79,3 +81,14 @@ export const setIsFetching = (status: boolean) => ({
   type: SET_IS_FETCHING,
   status,
 });
+
+export const getUserProfileThunkCreator = (userId: number) => {
+  return (dispatch: any) => {
+    dispatch(setIsFetching(true));
+
+    ProfileAPI.getProfile(userId).then((data: any) => {
+      dispatch(setIsFetching(false));
+      dispatch(setUserProfile(data));
+    });
+  };
+};

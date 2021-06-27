@@ -36,6 +36,17 @@ export const FollowAPI = {
 
   postFollow: (userId: number) => {
     return instance.post(`/follow/${userId}`).then(
+      (res) => {
+        return res.data;
+      },
+      (e) => console.log(e)
+    );
+  },
+};
+
+export const AuthAPI = {
+  authMe: () => {
+    return instance.get("/auth/me").then(
       (res) => res.data,
       (e) => console.log(e)
     );

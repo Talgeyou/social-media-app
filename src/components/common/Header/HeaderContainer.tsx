@@ -1,25 +1,17 @@
-import axios from "axios";
-import { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import Header from "./Header";
-import { setAuthUserData } from "../../../redux/authReducer";
+import { authMeThunkCreator } from "../../../redux/authReducer";
 
-const HeaderContainer = (props: any) => {
-  useEffect(() => {
-    axios
-      .get("https://social-network.samuraijs.com/api/1.0/auth/me", {
-        withCredentials: true,
-      })
-      .then((res: any) => {
-        if (res.data.resultCode === 0) {
-          let { id, email, login } = res.data.data;
-          props.setAuthUserData(id, email, login);
-        }
-      });
-  });
+class HeaderContainer extends React.Component<any> {
+  componentDidMount() {
+    this.props.authMe();
+  }
 
-  return <Header {...props} />;
-};
+  render() {
+    return <Header {...this.props} />;
+  }
+}
 
 const mapStateToProps = (state: any) => {
   return {
@@ -28,4 +20,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default connect(mapStateToProps, { setAuthUserData })(HeaderContainer);
+export default connect(mapStateToProps, { authMe: authMeThunkCreator })(
+  HeaderContainer
+);

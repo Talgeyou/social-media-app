@@ -1,50 +1,40 @@
-import { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { ProfileAPI } from "../../api/api";
-import { setUserProfile, setIsFetching } from "../../redux/profilesReducer";
+import { getUserProfileThunkCreator } from "../../redux/profilesReducer";
 import Preloader from "../common/Preloader";
 import Profile from "./Profile";
 
 interface ProfileContainerProps {
   profile: any;
   isFetching: boolean;
-  setUserProfile: (profile: any) => void;
-  setIsFetching: (stats: boolean) => void;
+  getUserProfile: (userId: number) => void;
   match: any;
 }
 
-const ProfileContainer = (props: ProfileContainerProps) => {
-  let id = +props.match.params.id;
-  if (!id) {
-    id = 2;
-  }
-  useEffect(() => {
-    if (!props.isFetching) {
-      const shouldFetch: boolean = props.profile
-        ? props.profile.userId !== id
-        : true;
-      if (shouldFetch) {
-        props.setIsFetching(true);
-        ProfileAPI.getProfile(id).then((data: any) => {
-          props.setUserProfile(data);
-          props.setIsFetching(false);
-        });
-      }
-    }
-  });
-
-  if (!props.profile || props.isFetching) {
-    return <Preloader />;
+class ProfileContainer extends React.Component<ProfileContainerProps> {
+  componentDidMount() {
+    this.props.getUserProfile(+this.props.match.params.id);
   }
 
-  return (
-    <Profile
-      profile={props.profile}
-      isFetching={props.isFetching}
-      setUserProfile={props.setUserProfile}
-    />
-  );
-};
+  render() {
+    return !this.props.profile || this.props.isFetching ? (
+      <Preloader />
+    ) : (
+      <Profile profile={this.props.profile} />
+    );
+  }
+}
+
+// const ProfileContainer = (props: ProfileContainerProps) => {
+//   let profileId = +props.match.params.id;
+
+//   useEffect(() => {
+//     if (!props.isFetching) {
+//       props.getUserProfile(profileId);
+//     }
+//   });
+
+// };
 
 const mapStateToProps = (state: any) => {
   return {
@@ -53,6 +43,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default connect(mapStateToProps, { setUserProfile, setIsFetching })(
-  ProfileContainer
-);
+export default connect(mapStateToProps, {
+  getUserProfile: getUserProfileThunkCreator,
+})(ProfileContainer);

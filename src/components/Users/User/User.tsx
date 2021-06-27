@@ -2,35 +2,21 @@ import styles from "./User.module.scss";
 import { Avatar, Button, Card } from "antd";
 import { Typography } from "antd";
 import { NavLink } from "react-router-dom";
-import { FollowAPI } from "../../../api/api";
 const { Title } = Typography;
 
 export interface UserProps {
   user: any;
   followingInProgress: Array<number>;
-  onFollow: (userId: number) => void;
-  onUnfollow: (userId: number) => void;
-  setFollowingInProgress: (userId: number, isFetching: boolean) => void;
+  followUser: (userId: number) => void;
+  unfollowUser: (userId: number) => void;
 }
 
 const User = (props: UserProps) => {
   const handleFollowButtonClick = () => {
     if (props.user.followed) {
-      props.setFollowingInProgress(props.user.id, true);
-      FollowAPI.deleteFollow(props.user.id).then((data: any) => {
-        props.setFollowingInProgress(props.user.id, false);
-        if (data && data.resultCode === 0) {
-          props.onUnfollow(props.user.id);
-        }
-      });
+      props.unfollowUser(props.user.id);
     } else {
-      props.setFollowingInProgress(props.user.id, true);
-      FollowAPI.postFollow(props.user.id).then((data: any) => {
-        props.setFollowingInProgress(props.user.id, false);
-        if (data && data.resultCode === 0) {
-          props.onFollow(props.user.id);
-        }
-      });
+      props.followUser(props.user.id);
     }
   };
 

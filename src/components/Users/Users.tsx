@@ -11,9 +11,8 @@ export interface UsersProps {
   isFetching: boolean;
   followingInProgress: Array<number>;
   changePage: (page: number, pageSize?: number) => void;
-  follow: (userId: number) => void;
-  unfollow: (userId: number) => void;
-  setFollowingInProgress: (userId: number, isFetching: boolean) => void;
+  followUser: (userId: number) => void;
+  unfollowUser: (userId: number) => void;
 }
 
 const Users = (props: UsersProps) => {
@@ -33,9 +32,8 @@ const Users = (props: UsersProps) => {
             key={user.id}
             user={user}
             followingInProgress={props.followingInProgress}
-            onFollow={props.follow}
-            onUnfollow={props.unfollow}
-            setFollowingInProgress={props.setFollowingInProgress}
+            followUser={props.followUser}
+            unfollowUser={props.unfollowUser}
           />
         ))}
       </div>

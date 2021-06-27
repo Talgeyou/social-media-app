@@ -1,87 +1,52 @@
-import { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import {
-  follow,
-  setCurrentPage,
-  setIsFetching,
-  setPageSize,
-  setTotalUsersCount,
-  setUsers,
-  unfollow,
-  setFollowingInProgress,
+  followUserThunkCreator,
+  getUsersThunkCreator,
+  unfollowUserThunkCreator,
 } from "../../redux/usersReducer";
 import Users from "./Users";
 import Preloader from "../common/Preloader";
-import { UsersAPI } from "../../api/api";
 
-interface UsersContainerComponentProps {
+interface UsersContainerProps {
   users: Array<any>;
   totalCount: number;
   pageSize: number;
   currentPage: number;
   isFetching: boolean;
   followingInProgress: Array<number>;
-  setUsers: (users: Array<any>) => void;
-  follow: (userId: number) => void;
-  unfollow: (userId: number) => void;
-  setCurrentPage: (currentPage: number) => void;
-  setTotalUsersCount: (totalCount: number) => void;
-  setPageSize: (pageSize: number) => void;
-  setIsFetching: (status: boolean) => void;
-  setFollowingInProgress: (userId: number, isFetching: boolean) => void;
+  getUsers: (currentPage: number, pageSize: number) => void;
+  followUser: (userId: number) => void;
+  unfollowUser: (userId: number) => void;
 }
 
-const UsersContainerComponent = (props: UsersContainerComponentProps) => {
-  useEffect(() => {
-    if (props.users && props.users.length < 1) {
-      if (!props.isFetching) {
-        props.setIsFetching(true);
-        UsersAPI.getUsers(props.currentPage, props.pageSize).then(
-          (data: any) => {
-            props.setIsFetching(false);
-            props.setUsers(data.items);
-            props.setTotalUsersCount(data.totalCount);
-            props.setCurrentPage(1);
-          }
-        );
-      }
-    }
-  });
+class UsersContainer extends React.Component<UsersContainerProps> {
+  componentDidMount() {
+    this.props.getUsers(this.props.currentPage, this.props.pageSize);
+  }
 
-  const handleChangePage = (pageNumber: number, pageSize?: number) => {
-    if (!props.isFetching) {
-      props.setIsFetching(true);
-      UsersAPI.getUsers(pageNumber, pageSize ? pageSize : props.pageSize).then(
-        (data: any) => {
-          props.setIsFetching(false);
-          if (pageSize) {
-            props.setPageSize(pageSize);
-          }
-          props.setTotalUsersCount(data.totalCount);
-          props.setCurrentPage(pageNumber);
-          props.setUsers(data.items);
-        }
-      );
-    }
+  handleChangePage = (pageNumber: number, pageSize?: number) => {
+    this.props.getUsers(pageNumber, pageSize ? pageSize : this.props.pageSize);
   };
 
-  return (
-    <Users
-      users={props.users}
-      totalCount={props.totalCount}
-      pageSize={props.pageSize}
-      currentPage={props.currentPage}
-      isFetching={props.isFetching}
-      followingInProgress={props.followingInProgress}
-      unfollow={props.unfollow}
-      follow={props.follow}
-      changePage={handleChangePage}
-      setFollowingInProgress={props.setFollowingInProgress}
-    >
-      {props.isFetching ? <Preloader /> : ""}
-    </Users>
-  );
-};
+  render() {
+    return (
+      <Users
+        users={this.props.users}
+        totalCount={this.props.totalCount}
+        pageSize={this.props.pageSize}
+        currentPage={this.props.currentPage}
+        isFetching={this.props.isFetching}
+        followingInProgress={this.props.followingInProgress}
+        changePage={this.handleChangePage}
+        followUser={this.props.followUser}
+        unfollowUser={this.props.unfollowUser}
+      >
+        {this.props.isFetching ? <Preloader /> : ""}
+      </Users>
+    );
+  }
+}
 
 const mapStateToProps = (state: any) => {
   return {
@@ -95,12 +60,7 @@ const mapStateToProps = (state: any) => {
 };
 
 export default connect(mapStateToProps, {
-  follow,
-  unfollow,
-  setUsers,
-  setCurrentPage,
-  setTotalUsersCount,
-  setPageSize,
-  setIsFetching,
-  setFollowingInProgress,
-})(UsersContainerComponent);
+  followUser: followUserThunkCreator,
+  unfollowUser: unfollowUserThunkCreator,
+  getUsers: getUsersThunkCreator,
+})(UsersContainer);
