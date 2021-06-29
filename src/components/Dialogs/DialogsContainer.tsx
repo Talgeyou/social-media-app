@@ -1,7 +1,9 @@
 import { connect } from "react-redux";
 
-import React, { Component } from "react";
+import { Component } from "react";
 import Dialogs from "./Dialogs";
+import { withAuthRedirect } from "../hoc/withAuthRedirect";
+import { compose } from "redux";
 
 class DialogsContainer extends Component<any> {
   render() {
@@ -12,8 +14,10 @@ class DialogsContainer extends Component<any> {
 const mapStateToProps = (state: any) => {
   return {
     dialogs: state.dialogs,
-    isAuth: state.auth.isAuth,
   };
 };
 
-export default connect(mapStateToProps)(DialogsContainer);
+export default compose<any>(
+  connect(mapStateToProps),
+  withAuthRedirect
+)(DialogsContainer);

@@ -24,6 +24,19 @@ export const ProfileAPI = {
       (e) => console.log(e)
     );
   },
+
+  getStatus: (userId: number) => {
+    return instance.get(`/profile/status/${userId}`).then(
+      (res) => res.data,
+      (e) => console.error(e)
+    );
+  },
+
+  updateStatus: (status: String) => {
+    return instance.put(`/profile/status`, {
+      status: status,
+    });
+  },
 };
 
 export const FollowAPI = {

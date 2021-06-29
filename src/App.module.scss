@@ -1,3 +1,11 @@
 .appWrapper {
   min-height: 100vh !important;
 }
+
+.preloader {
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -7,6 +7,16 @@ import {
 } from "../../redux/usersReducer";
 import Users from "./Users";
 import Preloader from "../common/Preloader";
+import { withAuthRedirect } from "../hoc/withAuthRedirect";
+import { compose } from "redux";
+import {
+  getCurrentPage,
+  getFetchingStatus,
+  getFollowingInProgress,
+  getPageSize,
+  getTotalUsersCount,
+  getUsers,
+} from "../../redux/users-selectors";
 
 interface UsersContainerProps {
   users: Array<any>;
@@ -50,17 +60,20 @@ class UsersContainer extends React.Component<UsersContainerProps> {
 
 const mapStateToProps = (state: any) => {
   return {
-    users: state.users.items,
-    pageSize: state.users.pageSize,
-    totalCount: state.users.totalCount,
-    currentPage: state.users.currentPage,
-    isFetching: state.users.isFetching,
-    followingInProgress: state.users.followingInProgress,
+    users: getUsers(state),
+    pageSize: getPageSize(state),
+    totalCount: getTotalUsersCount(state),
+    currentPage: getCurrentPage(state),
+    isFetching: getFetchingStatus(state),
+    followingInProgress: getFollowingInProgress(state),
   };
 };
 
-export default connect(mapStateToProps, {
-  followUser: followUserThunkCreator,
-  unfollowUser: unfollowUserThunkCreator,
-  getUsers: getUsersThunkCreator,
-})(UsersContainer);
+export default compose<any>(
+  connect(mapStateToProps, {
+    followUser: followUserThunkCreator,
+    unfollowUser: unfollowUserThunkCreator,
+    getUsers: getUsersThunkCreator,
+  }),
+  withAuthRedirect
+)(UsersContainer);

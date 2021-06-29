@@ -1,9 +1,11 @@
 import { ProfileAPI } from "../api/api";
+import Profile from "../components/Profile/Profile";
 
 export const addPostActionType = "ADD-POST";
 export const updateNewPostTextActionType = "UPDATE-NEW-POST-TEXT";
 const SET_USER_PROFILE = "SET_USER_PROFILE";
 const SET_IS_FETCHING = "SET_IS_FETCHING";
+const SET_STATUS = "SET_STATUS";
 
 interface Profile {
   userId: number;
@@ -30,11 +32,13 @@ interface Profile {
 interface ProfileState {
   profile: Profile | null;
   isFetching: boolean;
+  status: string | null;
 }
 
 const initialState: ProfileState = {
   profile: null,
   isFetching: false,
+  status: "",
 };
 
 const profilesReducer = (state: ProfileState = initialState, action: any) => {
@@ -43,6 +47,8 @@ const profilesReducer = (state: ProfileState = initialState, action: any) => {
       return { ...state, profile: { ...action.profile } };
     case SET_IS_FETCHING:
       return { ...state, isFetching: action.status };
+    case SET_STATUS:
+      return { ...state, status: action.status };
     default:
       return state;
   }
@@ -82,8 +88,13 @@ export const setIsFetching = (status: boolean) => ({
   status,
 });
 
-export const getUserProfileThunkCreator = (userId: number) => {
-  return (dispatch: any) => {
+export const setStatus = (status: string) => ({
+  type: SET_STATUS,
+  status,
+});
+
+export const getUserProfileThunkCreator =
+  (userId: number) => (dispatch: any) => {
     dispatch(setIsFetching(true));
 
     ProfileAPI.getProfile(userId).then((data: any) => {
@@ -91,4 +102,19 @@ export const getUserProfileThunkCreator = (userId: number) => {
       dispatch(setUserProfile(data));
     });
   };
-};
+
+export const getUserStatusThunkCreator =
+  (userId: number) => (dispatch: any) => {
+    ProfileAPI.getStatus(userId).then((data: string | null) => {
+      dispatch(setStatus(data ? data : ""));
+    });
+  };
+
+export const updateUserStatusThunkCreator =
+  (status: string) => (dispatch: any) => {
+    ProfileAPI.updateStatus(status).then((res: any) => {
+      if (res.data.resultCode === 0) {
+        dispatch(setStatus(status));
+      }
+    });
+  };

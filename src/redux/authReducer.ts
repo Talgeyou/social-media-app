@@ -31,7 +31,7 @@ export const setAuthUserData = (
 
 export const authMeThunkCreator = () => {
   return (dispatch: any) => {
-    AuthAPI.authMe().then((data) => {
+    return AuthAPI.authMe().then((data) => {
       if (data.resultCode === 0) {
         let { id, email, login } = data.data;
         dispatch(setAuthUserData(id, email, login));
