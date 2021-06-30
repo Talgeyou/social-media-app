@@ -1,4 +1,5 @@
 import { Pagination } from "antd";
+import React from "react";
 import User from "./User/User";
 import styles from "./Users.module.scss";
 
@@ -16,6 +17,7 @@ export interface UsersProps {
 }
 
 const Users = (props: UsersProps) => {
+  console.log("Users has been rendered");
   return (
     <div className={styles.users}>
       <Pagination
@@ -41,4 +43,4 @@ const Users = (props: UsersProps) => {
   );
 };
 
-export default Users;
+export default React.memo(Users);

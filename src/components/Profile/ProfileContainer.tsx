@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { compose } from "redux";
@@ -10,7 +10,7 @@ import {
 import { withAuthRedirect } from "../hoc/withAuthRedirect";
 import Profile from "./Profile";
 
-interface ProfileContainerProps {
+interface Props {
   authUserId: number | null;
   profile: any;
   status: string;
@@ -22,42 +22,19 @@ interface ProfileContainerProps {
   match: any;
 }
 
-class ProfileContainer extends React.Component<
-  ProfileContainerProps,
-  { userId: number }
-> {
-  constructor(props: ProfileContainerProps) {
-    super(props);
-
-    this.state = {
-      userId: +this.props.match.params.id,
-    };
-  }
-
-  componentDidMount() {
-    let userId = this.state.userId;
-    if (!userId) {
+export const ProfileContainer = (props: Props) => {
+  useEffect(() => {
+    let userId = props.match.params.id;
+    if (!userId || userId < 2) {
       userId = 2;
     }
-    this.props.getUserProfile(userId);
-    this.props.getUserStatus(userId);
-  }
+    props.getUserProfile(userId);
+    props.getUserStatus(userId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.match.params.id]);
 
-  componentDidUpdate(
-    prevProps: ProfileContainerProps,
-    prevState: { userId: number }
-  ) {
-    if (prevProps.match.params.id !== this.props.match.params.id) {
-      this.setState({ userId: this.props.match.params.id });
-      this.props.getUserProfile(this.props.match.params.id);
-      this.props.getUserStatus(this.props.match.params.id);
-    }
-  }
-
-  render() {
-    return <Profile {...this.props} />;
-  }
-}
+  return <Profile {...props} />;
+};
 
 const mapStateToProps = (state: any) => {
   return {
@@ -77,4 +54,4 @@ export default compose<any>(
 
   withRouter,
   withAuthRedirect
-)(ProfileContainer);
+)(React.memo(ProfileContainer));

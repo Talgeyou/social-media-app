@@ -11,7 +11,6 @@ export interface ProfileProps {
 }
 
 const Profile = (props: ProfileProps) => {
-  console.log("Profile has been rendered");
   return (
     <div className={styles.profile}>
       <ProfileInfo
