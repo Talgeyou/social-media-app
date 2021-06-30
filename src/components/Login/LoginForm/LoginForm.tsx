@@ -1,8 +1,22 @@
 import { Button, Checkbox, Form, Input } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { connect } from "react-redux";
+import { logInThunkCreator } from "../../../redux/authReducer";
 
-export default function LoginForm() {
+interface Props {
+  logIn: (email: string, password: string, rememberMe: boolean) => void;
+}
+
+const LoginForm = ({ logIn }: Props) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
+
+  const handleLogInButtonClick = () => {
+    logIn(email, password, rememberMe);
+  };
+
   return (
     <Form
       name="normal_login"
@@ -10,12 +24,17 @@ export default function LoginForm() {
       initialValues={{ remember: true }}
     >
       <Form.Item
-        name="username"
-        rules={[{ required: true, message: "Please input your Username!" }]}
+        name="email"
+        rules={[{ required: true, message: "Please input your Email!" }]}
       >
         <Input
           prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Username"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
         />
       </Form.Item>
       <Form.Item
@@ -26,27 +45,35 @@ export default function LoginForm() {
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
           placeholder="Password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
         />
       </Form.Item>
       <Form.Item>
         <Form.Item name="remember" valuePropName="checked" noStyle>
-          <Checkbox>Remember me</Checkbox>
+          <Checkbox
+            checked={rememberMe}
+            onChange={() => setRememberMe(!rememberMe)}
+          >
+            Remember me
+          </Checkbox>
         </Form.Item>
-
-        <Link to="/login">
-          <a className="login-form-forgot">Forgot password</a>
-        </Link>
       </Form.Item>
 
       <Form.Item>
-        <Button type="primary" htmlType="submit" className="login-form-button">
+        <Button
+          onClick={handleLogInButtonClick}
+          type="primary"
+          htmlType="submit"
+          className="login-form-button"
+        >
           Log in
         </Button>
-        Or{" "}
-        <Link to="/login">
-          <a>register now!</a>
-        </Link>
       </Form.Item>
     </Form>
   );
-}
+};
+
+export default connect(null, { logIn: logInThunkCreator })(LoginForm);
