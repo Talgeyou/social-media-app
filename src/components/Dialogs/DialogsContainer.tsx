@@ -10,12 +10,12 @@ interface Props {
 }
 
 const DialogsContainer = (props: Props) => {
-  return <Dialogs isAuth={props.isAuth} dialogs={props.dialogs} />;
+  return <Dialogs {...props} />;
 };
 
 const mapStateToProps = (state: any) => {
   return {
-    dialogs: state.dialogs,
+    dialogs: state.dialogsPage.dialogs,
   };
 };
 

@@ -11,30 +11,41 @@ export interface UsersProps {
   pageSize: number;
   isFetching: boolean;
   followingInProgress: Array<number>;
-  changePage: (page: number, pageSize?: number) => void;
+  changePage: (page: number, newPageSize?: number) => void;
   followUser: (userId: number) => void;
   unfollowUser: (userId: number) => void;
 }
 
-const Users = (props: UsersProps) => {
+const Users = ({
+  children,
+  users,
+  currentPage,
+  totalCount,
+  pageSize,
+  isFetching,
+  followingInProgress,
+  changePage,
+  followUser,
+  unfollowUser,
+}: UsersProps) => {
   return (
     <div className={styles.users}>
       <Pagination
-        disabled={props.isFetching}
-        current={props.currentPage}
-        total={props.totalCount}
-        onChange={props.changePage}
-        pageSize={props.pageSize}
+        disabled={isFetching}
+        current={currentPage}
+        total={totalCount}
+        onChange={changePage}
+        pageSize={pageSize}
       />
-      {props.children}
+      {children}
       <div className={styles.users__list}>
-        {props.users.map((user) => (
+        {users.map((user) => (
           <User
             key={user.id}
             user={user}
-            followingInProgress={props.followingInProgress}
-            followUser={props.followUser}
-            unfollowUser={props.unfollowUser}
+            followingInProgress={followingInProgress}
+            followUser={followUser}
+            unfollowUser={unfollowUser}
           />
         ))}
       </div>

@@ -1,6 +1,6 @@
 import { AuthAPI } from "../api/api";
 
-const SET_USER_DATA = "SET_USER_DATA";
+const SET_USER_DATA = "samurai/auth/SET_USER_DATA";
 
 const initialState = {
   userId: null,
@@ -29,15 +29,13 @@ export const setAuthUserData = (
   };
 };
 
-export const authMeThunkCreator = () => {
-  return (dispatch: any) => {
-    return AuthAPI.authMe().then((data) => {
-      if (data.resultCode === 0) {
-        let { id, email, login } = data.data;
-        dispatch(setAuthUserData(id, email, login));
-      }
-    });
-  };
+export const authMeThunkCreator = () => async (dispatch: any) => {
+  let response = await AuthAPI.authMe();
+
+  if (response.resultCode === 0) {
+    let { id, email, login } = response.data;
+    dispatch(setAuthUserData(id, email, login));
+  }
 };
 
 export default authReducer;

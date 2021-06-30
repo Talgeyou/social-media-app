@@ -30,29 +30,39 @@ interface Props {
   unfollowUser: (userId: number) => void;
 }
 
-const UsersContainer = (props: Props) => {
+const UsersContainer = ({
+  users,
+  totalCount,
+  pageSize,
+  currentPage,
+  isFetching,
+  followingInProgress,
+  getUsers,
+  followUser,
+  unfollowUser,
+}: Props) => {
   useEffect(() => {
-    props.getUsers(props.currentPage, props.pageSize);
+    getUsers(currentPage, pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.currentPage, props.pageSize]);
+  }, [currentPage, pageSize]);
 
-  const handleChangePage = (pageNumber: number, pageSize?: number) => {
-    props.getUsers(pageNumber, pageSize ? pageSize : props.pageSize);
+  const handleChangePage = (pageNumber: number, newPageSize?: number) => {
+    getUsers(pageNumber, newPageSize ? newPageSize : pageSize);
   };
 
   return (
     <Users
-      users={props.users}
-      totalCount={props.totalCount}
-      pageSize={props.pageSize}
-      currentPage={props.currentPage}
-      isFetching={props.isFetching}
-      followingInProgress={props.followingInProgress}
+      users={users}
+      totalCount={totalCount}
+      pageSize={pageSize}
+      currentPage={currentPage}
+      isFetching={isFetching}
+      followingInProgress={followingInProgress}
       changePage={handleChangePage}
-      followUser={props.followUser}
-      unfollowUser={props.unfollowUser}
+      followUser={followUser}
+      unfollowUser={unfollowUser}
     >
-      {props.isFetching ? <Preloader /> : ""}
+      {isFetching ? <Preloader /> : ""}
     </Users>
   );
 };

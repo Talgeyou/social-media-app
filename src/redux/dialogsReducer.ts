@@ -1,31 +1,64 @@
-export const sendMessageActionType = "SEND-MESSAGE";
-export const updateNewMessageTextActionType = "UPDATE-NEW-MESSAGE-TEXT";
+export const SEND_MESSAGE = "samurai/dialogs/SEND-MESSAGE";
 
-const initialState = {
-  dialogs: [],
+interface User {
+  id: number;
+  name: string;
+  imgUrl?: string | null;
+}
+
+interface Message {
+  id: number;
+  author: User;
+  body: string;
+}
+
+interface Dialog {
+  id: number;
+  user: User;
+  messages: Array<Message>;
+}
+
+interface DialogsState {
+  dialogs: Array<Dialog>;
+}
+
+const initialState: DialogsState = {
+  dialogs: [
+    {
+      id: 0,
+      user: {
+        id: 1,
+        name: "RAGEEXE",
+      },
+      messages: [
+        { id: 0, author: { id: 0, name: "Talge" }, body: "Hello, :3" },
+      ],
+    },
+  ],
 };
 
 const dialogsReducer = (state: any = initialState, action: any) => {
-  let dialog: any | undefined;
   switch (action.type) {
-    case sendMessageActionType:
-      dialog = state.dialogs.find((d: any) => d.id === action.dialogId);
-      if (dialog && dialog.newMessageText.length > 0) {
-        let newMessage: any = {
-          id: dialog.messages.length,
-          author: action.author,
-          body: dialog.newMessageText,
-        };
-        dialog.newMessageText = "";
-        dialog.messages.push(newMessage);
-      }
-      break;
-    case updateNewMessageTextActionType:
-      dialog = state.dialogs.find((d: any) => d.id === action.dialogId);
-      if (dialog) {
-        dialog.newMessageText = action.messageText;
-      }
-      break;
+    case SEND_MESSAGE:
+      return {
+        ...state,
+        dialogs: state.dialogs.map((d: Dialog) => {
+          if (d.id === action.dialogId) {
+            return {
+              ...d,
+              messages: [
+                ...d.messages,
+                {
+                  id: d.messages.length,
+                  author: { id: 0, name: "Talge" },
+                  body: action.messageText,
+                },
+              ],
+            };
+          }
+          return d;
+        }),
+      };
   }
   return state;
 };
@@ -33,15 +66,10 @@ const dialogsReducer = (state: any = initialState, action: any) => {
 export default dialogsReducer;
 
 export const sendMessageActionCreator = (
-  dialogId: number,
-  author: { id: number; name: string; imgUrl?: string }
-) => ({ type: sendMessageActionType, dialogId: dialogId, author: author });
-
-export const updateNewMessageTextActionCreator = (
-  dialogId: number,
-  messageText: string
+  messageText: string,
+  dialogId: number
 ) => ({
-  type: updateNewMessageTextActionType,
-  dialogId: dialogId,
-  messageText: messageText,
+  type: SEND_MESSAGE,
+  messageText,
+  dialogId,
 });

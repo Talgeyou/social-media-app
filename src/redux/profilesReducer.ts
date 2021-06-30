@@ -1,11 +1,10 @@
+import moment from "moment";
 import { ProfileAPI } from "../api/api";
-import Profile from "../components/Profile/Profile";
 
-export const addPostActionType = "ADD-POST";
-export const updateNewPostTextActionType = "UPDATE-NEW-POST-TEXT";
-const SET_USER_PROFILE = "SET_USER_PROFILE";
-const SET_IS_FETCHING = "SET_IS_FETCHING";
-const SET_STATUS = "SET_STATUS";
+export const ADD_POST = "samurai/profiles/ADD_POST";
+const SET_USER_PROFILE = "samurai/profiles/SET_USER_PROFILE";
+const SET_IS_FETCHING = "samurai/profiles/SET_IS_FETCHING";
+const SET_STATUS = "samurai/profiles/SET_STATUS";
 
 interface Profile {
   userId: number;
@@ -29,20 +28,50 @@ interface Profile {
   aboutMe: string | null;
 }
 
+interface Post {
+  id: number;
+  author: {
+    id?: number;
+    name?: string;
+    imgUrl?: string | null;
+  };
+  body: string;
+  creationDate: string;
+}
+
 interface ProfileState {
   profile: Profile | null;
   isFetching: boolean;
   status: string | null;
+  posts: Array<Post>;
 }
 
 const initialState: ProfileState = {
   profile: null,
   isFetching: false,
   status: "",
+  posts: [],
 };
 
 const profilesReducer = (state: ProfileState = initialState, action: any) => {
   switch (action.type) {
+    case ADD_POST:
+      return {
+        ...state,
+        posts: [
+          ...state.posts,
+          {
+            id: state.posts.length,
+            author: {
+              id: state.profile?.userId,
+              name: state.profile?.fullName,
+              imgUrl: state.profile?.photos.small,
+            },
+            body: action.postText,
+            creationDate: moment().toString(),
+          },
+        ],
+      };
     case SET_USER_PROFILE:
       return { ...state, profile: { ...action.profile } };
     case SET_IS_FETCHING:
@@ -56,26 +85,9 @@ const profilesReducer = (state: ProfileState = initialState, action: any) => {
 
 export default profilesReducer;
 
-export const addPostActionCreator = (
-  profileId: number,
-  author: {
-    id: number;
-    name: string;
-    imgUrl?: string;
-  }
-) => ({
-  type: addPostActionType,
-  profileId: profileId,
-  author: author,
-});
-
-export const updateNewPostTextActionCreator = (
-  profileId: number,
-  postText: string
-) => ({
-  type: updateNewPostTextActionType,
-  profileId: profileId,
-  postText: postText,
+export const addPost = (postText: string) => ({
+  type: ADD_POST,
+  postText,
 });
 
 export const setUserProfile = (profile: number) => ({
@@ -94,27 +106,25 @@ export const setStatus = (status: string) => ({
 });
 
 export const getUserProfileThunkCreator =
-  (userId: number) => (dispatch: any) => {
+  (userId: number) => async (dispatch: any) => {
     dispatch(setIsFetching(true));
 
-    ProfileAPI.getProfile(userId).then((data: any) => {
-      dispatch(setIsFetching(false));
-      dispatch(setUserProfile(data));
-    });
+    const data = await ProfileAPI.getProfile(userId);
+
+    dispatch(setIsFetching(false));
+    dispatch(setUserProfile(data));
   };
 
 export const getUserStatusThunkCreator =
-  (userId: number) => (dispatch: any) => {
-    ProfileAPI.getStatus(userId).then((data: string | null) => {
-      dispatch(setStatus(data ? data : ""));
-    });
+  (userId: number) => async (dispatch: any) => {
+    const data = await ProfileAPI.getStatus(userId);
+    dispatch(setStatus(data ? data : ""));
   };
 
 export const updateUserStatusThunkCreator =
-  (status: string) => (dispatch: any) => {
-    ProfileAPI.updateStatus(status).then((res: any) => {
-      if (res.data.resultCode === 0) {
-        dispatch(setStatus(status));
-      }
-    });
+  (status: string) => async (dispatch: any) => {
+    const response = await ProfileAPI.updateStatus(status);
+    if (response.data.resultCode === 0) {
+      dispatch(setStatus(status));
+    }
   };

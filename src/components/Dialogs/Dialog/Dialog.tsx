@@ -1,29 +1,36 @@
 import { Button, Input } from "antd";
+import { useState } from "react";
 import styles from "./Dialog.module.scss";
 import MessagesContainer from "./Messages/MessagesContainer";
 
 export interface DialogProps {
+  dialogId: number;
   messages: Array<any>;
-  newMessageText: string;
-  onNewMessageTextChange: (textMessage: string) => void;
-  onSendMessageButtonClick: () => void;
+  sendMessage: (messageText: string, dialogId: number) => void;
 }
 
-const Dialog = (props: DialogProps) => {
-  const handleNewMessageTextChange = (e: any) => {
-    props.onNewMessageTextChange(e.target.value);
+const Dialog = ({ dialogId, messages, sendMessage }: DialogProps) => {
+  const [newMessageText, setNewMessageText] = useState("");
+
+  const handleNewMessageTextChange = (e: { target: { value: any } }) => {
+    setNewMessageText(e.target.value);
+  };
+
+  const handleSendMessageButtonClick = () => {
+    setNewMessageText("");
+    sendMessage(newMessageText, dialogId);
   };
 
   return (
     <div className={styles.dialogWrapper}>
-      <MessagesContainer messages={props.messages} />
+      <MessagesContainer messages={messages} />
       <div className={styles.dialogSendMessage}>
         <Input.TextArea
           rows={4}
           onChange={handleNewMessageTextChange}
-          value={props.newMessageText}
+          value={newMessageText}
         />
-        <Button type="primary" onClick={props.onSendMessageButtonClick}>
+        <Button type="primary" onClick={handleSendMessageButtonClick}>
           Send
         </Button>
       </div>

@@ -11,12 +11,17 @@ export interface UserProps {
   unfollowUser: (userId: number) => void;
 }
 
-const User = (props: UserProps) => {
+const User = ({
+  user,
+  followingInProgress,
+  followUser,
+  unfollowUser,
+}: UserProps) => {
   const handleFollowButtonClick = () => {
-    if (props.user.followed) {
-      props.unfollowUser(props.user.id);
+    if (user.followed) {
+      unfollowUser(user.id);
     } else {
-      props.followUser(props.user.id);
+      followUser(user.id);
     }
   };
 
@@ -26,32 +31,28 @@ const User = (props: UserProps) => {
       actions={[
         <Button
           disabled={
-            props.followingInProgress.find((id) => id === props.user.id)
-              ? true
-              : false
+            followingInProgress.find((id) => id === user.id) ? true : false
           }
-          type={props.user.followed ? "ghost" : "primary"}
+          type={user.followed ? "ghost" : "primary"}
           onClick={handleFollowButtonClick}
         >
-          {props.user.followed ? "Unfollow" : "Follow"}
+          {user.followed ? "Unfollow" : "Follow"}
         </Button>,
       ]}
       title={
-        <NavLink to={`/profile/${props.user.id}`} className={styles.meta}>
+        <NavLink to={`/profile/${user.id}`} className={styles.meta}>
           <Avatar
             className={styles.avatar}
-            src={
-              props.user.photos.small !== null ? props.user.photos.small : ""
-            }
+            src={user.photos.small !== null ? user.photos.small : ""}
           />
-          <div className={styles.name}>{props.user.name}</div>
+          <div className={styles.name}>{user.name}</div>
         </NavLink>
       }
     >
       <Card.Meta
         description={
           <Title level={3} className={styles.status}>
-            {props.user.status}
+            {user.status}
           </Title>
         }
       />

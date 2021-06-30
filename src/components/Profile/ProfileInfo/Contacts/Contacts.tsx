@@ -9,7 +9,27 @@ import {
   YoutubeOutlined,
 } from "@ant-design/icons";
 
-const Contacts = (props: any) => {
+interface Props {
+  facebook: string | null;
+  website: string | null;
+  vk: string | null;
+  twitter: string | null;
+  instagram: string | null;
+  youtube: string | null;
+  github: string | null;
+  mainLink: string | null;
+}
+
+const Contacts = ({
+  facebook,
+  website,
+  vk,
+  twitter,
+  instagram,
+  youtube,
+  github,
+  mainLink,
+}: Props) => {
   const addHttps = (url: string) => {
     if (url.indexOf("http://") !== 0 || url.indexOf("https://") !== 0) {
       return `https://${url}`;
@@ -19,96 +39,96 @@ const Contacts = (props: any) => {
 
   return (
     <div className={styles.contacts}>
-      {props.facebook ? (
+      {facebook ? (
         <a
           className={styles.contact}
           target={"_blank"}
           rel={"noopener noreferrer"}
-          href={`${addHttps(props.facebook)}`}
+          href={`${addHttps(facebook)}`}
         >
           <FacebookOutlined />
         </a>
       ) : (
         ""
       )}
-      {props.website ? (
+      {website ? (
         <a
           className={styles.contact}
           target={"_blank"}
           rel={"noopener noreferrer"}
-          href={`${addHttps(props.website)}`}
+          href={`${addHttps(website)}`}
         >
           <CloudOutlined />
         </a>
       ) : (
         ""
       )}
-      {props.vk ? (
+      {vk ? (
         <a
           className={styles.contact}
           target={"_blank"}
           rel={"noopener noreferrer"}
-          href={`${addHttps(props.vk)}`}
+          href={`${addHttps(vk)}`}
         >
           VK
         </a>
       ) : (
         ""
       )}
-      {props.twitter ? (
+      {twitter ? (
         <a
           className={styles.contact}
           target={"_blank"}
           rel={"noopener noreferrer"}
-          href={`${addHttps(props.twitter)}`}
+          href={`${addHttps(twitter)}`}
         >
           <TwitterOutlined />
         </a>
       ) : (
         ""
       )}
-      {props.instagram ? (
+      {instagram ? (
         <a
           className={styles.contact}
           target={"_blank"}
           rel={"noopener noreferrer"}
-          href={`${addHttps(props.instagram)}`}
+          href={`${addHttps(instagram)}`}
         >
           <InstagramOutlined />
         </a>
       ) : (
         ""
       )}
-      {props.youtube ? (
+      {youtube ? (
         <a
           className={styles.contact}
           target={"_blank"}
           rel={"noopener noreferrer"}
-          href={`${addHttps(props.youtube)}`}
+          href={`${addHttps(youtube)}`}
         >
           <YoutubeOutlined />
         </a>
       ) : (
         ""
       )}
-      {props.github ? (
+      {github ? (
         <a
           className={styles.contact}
           target={"_blank"}
           rel={"noopener noreferrer"}
-          href={`${addHttps(props.github)}`}
+          href={`${addHttps(github)}`}
         >
           <GithubOutlined />
         </a>
       ) : (
         ""
       )}
-      {props.mainLink ? (
+      {mainLink ? (
         <a
           className={styles.contact}
           target={"_blank"}
           rel={"noopener noreferrer"}
-          href={`${addHttps(props.mainLink)}`}
+          href={`${addHttps(mainLink)}`}
         >
           <LinkOutlined />
         </a>

@@ -2,7 +2,6 @@ import styles from "./ProfileInfo.module.scss";
 import { Image, Descriptions } from "antd";
 import Contacts from "./Contacts/Contacts";
 import ProfileStatus from "./ProfileStatus/ProfileStatus";
-import Preloader from "../../common/Preloader";
 import { UserOutlined } from "@ant-design/icons";
 import React from "react";
 
@@ -21,7 +20,7 @@ export interface ProfileInfoProps {
   };
   lookingForAJob: boolean;
   lookingForAJobDescription: string | null;
-  fullname: string;
+  fullName: string;
   userId: number;
   photos: {
     small: string | null;
@@ -31,19 +30,26 @@ export interface ProfileInfoProps {
   updateUserStatus: (status: string) => void;
 }
 
-const ProfileInfo = (props: any) => {
-  if (props.isFetching) {
-    return <Preloader />;
-  }
-
+const ProfileInfo = ({
+  authUserId,
+  aboutMe,
+  contacts,
+  lookingForAJob,
+  lookingForAJobDescription,
+  fullName,
+  userId,
+  photos,
+  status,
+  updateUserStatus,
+}: ProfileInfoProps) => {
   return (
     <div className={styles.profileInfo}>
       <div>
         <div className={styles.avatar}>
-          {props.photos && props.photos.large ? (
+          {photos && photos.large ? (
             <Image
               preview={false}
-              src={props.photos.large}
+              src={photos.large}
               width={300}
               height={300}
             />
@@ -53,30 +59,30 @@ const ProfileInfo = (props: any) => {
         </div>
       </div>
       <div className={styles.profileMeta}>
-        <Descriptions title={props.fullName} column={1}>
+        <Descriptions title={fullName} column={1}>
           <Descriptions.Item label="Status">
             <ProfileStatus
-              profileUserId={props.userId}
-              authUserId={props.authUserId}
-              status={props.status}
-              updateUserStatus={props.updateUserStatus}
+              profileUserId={userId}
+              authUserId={authUserId}
+              status={status}
+              updateUserStatus={updateUserStatus}
             />
             <Descriptions.Item label="About">
-              <p>{props.aboutMe}</p>
+              <p>{aboutMe}</p>
             </Descriptions.Item>
           </Descriptions.Item>
           <Descriptions.Item label="Looking for a Job">
-            {props.lookingForAJob
+            {lookingForAJob
               ? `Looking for a Job 
                 ${
-                  props.lookingForAJobDescription
-                    ? `(${props.lookingForAJobDescription})`
+                  lookingForAJobDescription
+                    ? `(${lookingForAJobDescription})`
                     : ""
                 }`
               : "Doesn't Looking for a Job"}
           </Descriptions.Item>
         </Descriptions>
-        <Contacts {...props.contacts} />
+        <Contacts {...contacts} />
       </div>
     </div>
   );

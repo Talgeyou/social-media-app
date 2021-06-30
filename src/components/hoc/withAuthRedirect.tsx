@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
-export const withAuthRedirect = (Component: any) => {
+export const withAuthRedirect = (Component: (props: any) => JSX.Element) => {
   class RedirectComponent extends React.Component<any> {
     render() {
       if (!this.props.isAuth) return <Redirect to="/login" />;

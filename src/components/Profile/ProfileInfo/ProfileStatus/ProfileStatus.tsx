@@ -10,14 +10,19 @@ interface Props {
   updateUserStatus: (status: string) => void;
 }
 
-const ProfileStatus = (props: Props) => {
+const ProfileStatus = ({
+  authUserId,
+  profileUserId,
+  status,
+  updateUserStatus,
+}: Props) => {
   const [editMode, setEditMode] = useState(false);
 
-  const [status, setStatus] = useState(props.status);
+  const [newStatus, setNewStatus] = useState(status);
 
   useEffect(() => {
-    setStatus(props.status);
-  }, [props.status]);
+    setNewStatus(status);
+  }, [status]);
 
   const handleFocus = (e: { currentTarget: { select: () => void } }) => {
     e.currentTarget.select();
@@ -25,8 +30,8 @@ const ProfileStatus = (props: Props) => {
 
   const handleBlur = () => {
     setEditMode(false);
-    if (status !== props.status) {
-      props.updateUserStatus(status);
+    if (status !== newStatus) {
+      updateUserStatus(newStatus);
     }
   };
 
@@ -38,26 +43,24 @@ const ProfileStatus = (props: Props) => {
             autoFocus={true}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            onChange={(e) => setStatus(e.target.value)}
-            value={status}
+            onChange={(e) => setNewStatus(e.target.value)}
+            value={newStatus}
           />
         </div>
       ) : (
         <div
           className={styles.status__text}
           onDoubleClick={() => {
-            if (props.authUserId === props.profileUserId) {
+            if (authUserId === profileUserId) {
               setEditMode(true);
             }
           }}
         >
           <span>
-            {props.status && props.status.length > 0
-              ? props.status
-              : "There is no status"}
+            {status && status.length > 0 ? status : "There is no status"}
           </span>
           <span>
-            {props.authUserId === props.profileUserId ? (
+            {authUserId === profileUserId ? (
               <Typography.Text type={"secondary"}>
                 {"    Double click to change it"}
               </Typography.Text>

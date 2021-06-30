@@ -1,6 +1,7 @@
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import styles from "./Profile.module.scss";
 import React from "react";
+import PostsContainer from "./Posts/PostsContainer";
 
 export interface ProfileProps {
   profile?: any;
@@ -10,16 +11,22 @@ export interface ProfileProps {
   updateUserStatus: (status: string) => void;
 }
 
-const Profile = (props: ProfileProps) => {
+const Profile = ({
+  profile,
+  isAuth,
+  authUserId,
+  status,
+  updateUserStatus,
+}: ProfileProps) => {
   return (
     <div className={styles.profile}>
       <ProfileInfo
-        {...props.profile}
-        authUserId={props.authUserId}
-        status={props.status}
-        updateUserStatus={props.updateUserStatus}
+        {...profile}
+        authUserId={authUserId}
+        status={status}
+        updateUserStatus={updateUserStatus}
       />
-      {/* <PostsContainer profile={props.profile} /> */}
+      <PostsContainer />
     </div>
   );
 };

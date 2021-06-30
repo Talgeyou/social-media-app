@@ -8,8 +8,8 @@ export interface DialogsProps {
   isAuth: boolean;
 }
 
-const Dialogs = (props: DialogsProps) => {
-  if (!props.isAuth) {
+const Dialogs = ({ dialogs, isAuth }: DialogsProps) => {
+  if (!isAuth) {
     return <Redirect to={"/login"} />;
   }
 
@@ -19,7 +19,7 @@ const Dialogs = (props: DialogsProps) => {
         <List
           grid={{ gutter: 16, column: 1 }}
           itemLayout="horizontal"
-          dataSource={props.dialogs}
+          dataSource={dialogs}
           renderItem={(dialog) => {
             return (
               <Link key={dialog.id} to={`/dialogs/${dialog.id}`}>

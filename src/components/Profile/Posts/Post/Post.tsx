@@ -1,6 +1,8 @@
+import styles from "./Post.module.scss";
 import { Avatar, Comment, Tooltip } from "antd";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { UserOutlined } from "@ant-design/icons";
 
 export interface PostProps {
   post: {
@@ -15,23 +17,27 @@ export interface PostProps {
   };
 }
 
-const Post: React.SFC<PostProps> = (props: PostProps) => {
+const Post: React.SFC<PostProps> = ({ post }: PostProps) => {
   return (
     <Comment
-      author={
-        <Link to={`/profile/${props.post.author.id}`}>
-          {props.post.author.name}
-        </Link>
-      }
+      author={<Link to={`/profile/${post.author.id}`}>{post.author.name}</Link>}
       avatar={
-        <Avatar src={props.post.author.imgUrl} alt={props.post.author.name} />
+        post.author.imgUrl ? (
+          <Avatar
+            className={styles.author__avatar}
+            src={post.author.imgUrl}
+            alt={post.author.name}
+          />
+        ) : (
+          <UserOutlined />
+        )
       }
-      content={<p>{props.post.body}</p>}
+      content={<p>{post.body}</p>}
       datetime={
         <Tooltip
-          title={moment(props.post.creationDate).format("YYYY-MM-DD HH:mm:ss")}
+          title={moment(post.creationDate).format("YYYY-MM-DD HH:mm:ss")}
         >
-          <span>{moment(props.post.creationDate).fromNow()}</span>
+          <span>{moment(post.creationDate).fromNow()}</span>
         </Tooltip>
       }
     />

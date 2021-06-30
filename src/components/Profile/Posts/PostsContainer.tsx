@@ -1,33 +1,26 @@
-import {
-  addPostActionCreator,
-  updateNewPostTextActionCreator,
-} from "../../../redux/profilesReducer";
+import { connect } from "react-redux";
+import { getAuthUserId } from "../../../redux/auth-selectors";
+import { getProfileUserId } from "../../../redux/profiles-selectors";
+import { addPost } from "../../../redux/profilesReducer";
 import Posts from "./Posts";
 
 export interface PostsContainerProps {
-  profile: any;
-  dispatch: any;
+  authUserId: number;
+  profileUserId: number;
+  posts: Array<any>;
+  addPost: (postText: any) => void;
 }
 
 const PostsContainer = (props: PostsContainerProps) => {
-  const handlePostChange = (postText: string) => {
-    const action = updateNewPostTextActionCreator(props.profile.id, postText);
-    props.dispatch(action);
-  };
-
-  const handlePostAdd = (author: any) => {
-    const action = addPostActionCreator(props.profile.id, author);
-    props.dispatch(action);
-  };
-
-  return (
-    <Posts
-      newPostText={props.profile.newPostText}
-      posts={props.profile.posts}
-      onNewPostTextChange={handlePostChange}
-      onAddPost={handlePostAdd}
-    />
-  );
+  return <Posts {...props} />;
 };
 
-export default PostsContainer;
+const mapStateToProps = (state: any) => {
+  return {
+    authUserId: getAuthUserId(state),
+    profileUserId: getProfileUserId(state),
+    posts: state.profilePage.posts,
+  };
+};
+
+export default connect(mapStateToProps, { addPost })(PostsContainer);
