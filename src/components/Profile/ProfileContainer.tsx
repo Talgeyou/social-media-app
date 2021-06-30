@@ -22,7 +22,7 @@ interface Props {
   match: any;
 }
 
-export const ProfileContainer = (props: Props) => {
+const ProfileContainer = (props: Props) => {
   useEffect(() => {
     let userId = props.match.params.id;
     if (!userId || userId < 2) {

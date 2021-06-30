@@ -30,7 +30,7 @@ interface Props {
   unfollowUser: (userId: number) => void;
 }
 
-export const UsersContainer = (props: Props) => {
+const UsersContainer = (props: Props) => {
   useEffect(() => {
     props.getUsers(props.currentPage, props.pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps

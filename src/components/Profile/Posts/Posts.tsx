@@ -12,6 +12,8 @@ export interface PostsProps {
 }
 
 const Posts = (props: PostsProps) => {
+  const posts = props.posts.reverse();
+
   const handleNewPostTextChange = (e: { target: { value: any } }) => {
     let postText = e.target.value;
     props.onNewPostTextChange(postText);
@@ -42,7 +44,7 @@ const Posts = (props: PostsProps) => {
         </div>
         <List
           itemLayout="horizontal"
-          dataSource={props.posts.reverse()}
+          dataSource={posts}
           renderItem={(post: any) => (
             <li key={post.id} className={styles.comment}>
               <Post post={post} />
