@@ -5,6 +5,13 @@
 }
 
 .avatar {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 300px;
+  background-color: #ffffff;
   border: solid 1px #1890ff;
   border-radius: 5px;
 }

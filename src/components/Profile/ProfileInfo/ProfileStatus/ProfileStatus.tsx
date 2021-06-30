@@ -1,72 +1,74 @@
 import styles from "./ProfileStatus.module.scss";
-import { Input } from "antd";
-import { Component } from "react";
+import { Input, Typography } from "antd";
+import { useEffect, useState } from "react";
+import React from "react";
 
-export interface ProfileStatusProps {
+interface Props {
   authUserId: number | null;
   profileUserId: number | null;
   status: string;
   updateUserStatus: (status: string) => void;
 }
 
-export default class ProfileStatus extends Component<ProfileStatusProps, any> {
-  constructor(props: any) {
-    super(props);
-    this.state = { status: this.props.status, editMode: false };
-  }
+const ProfileStatus = (props: Props) => {
+  const [editMode, setEditMode] = useState(false);
 
-  componentDidUpdate(prevProps: ProfileStatusProps) {
-    if (prevProps.status !== this.props.status) {
-      this.setState({ status: this.props.status });
-    }
-  }
+  const [status, setStatus] = useState(props.status);
 
-  activateEditMode = () => {
-    if (
-      this.props.authUserId &&
-      this.props.profileUserId &&
-      this.props.authUserId === this.props.profileUserId
-    ) {
-      this.setState({ editMode: true });
+  useEffect(() => {
+    setStatus(props.status);
+  }, [props.status]);
+
+  const handleFocus = (e: { currentTarget: { select: () => void } }) => {
+    e.currentTarget.select();
+  };
+
+  const handleBlur = () => {
+    setEditMode(false);
+    if (status !== props.status) {
+      props.updateUserStatus(status);
     }
   };
 
-  deactivateEditMode = () => {
-    this.setState({ editMode: false });
-    this.props.updateUserStatus(this.state.status);
-  };
+  return (
+    <div>
+      {editMode ? (
+        <div>
+          <Input
+            autoFocus={true}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onChange={(e) => setStatus(e.target.value)}
+            value={status}
+          />
+        </div>
+      ) : (
+        <div
+          className={styles.status__text}
+          onDoubleClick={() => {
+            if (props.authUserId === props.profileUserId) {
+              setEditMode(true);
+            }
+          }}
+        >
+          <span>
+            {props.status && props.status.length > 0
+              ? props.status
+              : "There is no status"}
+          </span>
+          <span>
+            {props.authUserId === props.profileUserId ? (
+              <Typography.Text type={"secondary"}>
+                {"    Double click to change it"}
+              </Typography.Text>
+            ) : (
+              ""
+            )}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
 
-  handleStatusInputFocus = (e: { target: { select: () => void } }) => {
-    e.target.select();
-  };
-
-  handleStatusChange = (e: { target: { value: any } }) => {
-    this.setState({ status: e.target.value });
-  };
-
-  render() {
-    return (
-      <div>
-        {this.state.editMode ? (
-          <div>
-            <Input
-              autoFocus={true}
-              onFocus={this.handleStatusInputFocus}
-              onBlur={this.deactivateEditMode}
-              onChange={this.handleStatusChange}
-              value={this.state.status}
-            />
-          </div>
-        ) : (
-          <div className={styles.status__text}>
-            <span onDoubleClick={this.activateEditMode}>
-              {this.props.status && this.props.status.length > 0
-                ? this.props.status
-                : "There is no status"}
-            </span>
-          </div>
-        )}
-      </div>
-    );
-  }
-}
+export default ProfileStatus;

@@ -1,5 +1,6 @@
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import styles from "./Profile.module.scss";
+import React from "react";
 
 export interface ProfileProps {
   profile?: any;
@@ -10,6 +11,7 @@ export interface ProfileProps {
 }
 
 const Profile = (props: ProfileProps) => {
+  console.log("Profile has been rendered");
   return (
     <div className={styles.profile}>
       <ProfileInfo

@@ -1,8 +1,10 @@
 import styles from "./ProfileInfo.module.scss";
 import { Image, Descriptions } from "antd";
 import Contacts from "./Contacts/Contacts";
-import Preloader from "../../common/Preloader";
 import ProfileStatus from "./ProfileStatus/ProfileStatus";
+import Preloader from "../../common/Preloader";
+import { UserOutlined } from "@ant-design/icons";
+import React from "react";
 
 export interface ProfileInfoProps {
   authUserId: number | null;
@@ -37,27 +39,31 @@ const ProfileInfo = (props: any) => {
   return (
     <div className={styles.profileInfo}>
       <div>
-        {props.photos && props.photos.large ? (
-          <Image
-            preview={false}
-            className={styles.avatar}
-            src={props.photos.large}
-            width={300}
-          />
-        ) : (
-          ""
-        )}
-        <ProfileStatus
-          profileUserId={props.userId}
-          authUserId={props.authUserId}
-          status={props.status}
-          updateUserStatus={props.updateUserStatus}
-        />
+        <div className={styles.avatar}>
+          {props.photos && props.photos.large ? (
+            <Image
+              preview={false}
+              src={props.photos.large}
+              width={300}
+              height={300}
+            />
+          ) : (
+            <UserOutlined width={300} height={300} />
+          )}
+        </div>
       </div>
       <div className={styles.profileMeta}>
         <Descriptions title={props.fullName} column={1}>
-          <Descriptions.Item label="About">
-            <p>{props.aboutMe}</p>
+          <Descriptions.Item label="Status">
+            <ProfileStatus
+              profileUserId={props.userId}
+              authUserId={props.authUserId}
+              status={props.status}
+              updateUserStatus={props.updateUserStatus}
+            />
+            <Descriptions.Item label="About">
+              <p>{props.aboutMe}</p>
+            </Descriptions.Item>
           </Descriptions.Item>
           <Descriptions.Item label="Looking for a Job">
             {props.lookingForAJob
@@ -76,4 +82,4 @@ const ProfileInfo = (props: any) => {
   );
 };
 
-export default ProfileInfo;
+export default React.memo(ProfileInfo);
