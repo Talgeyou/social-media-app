@@ -17,7 +17,6 @@ export interface UsersProps {
 }
 
 const Users = (props: UsersProps) => {
-  console.log("Users has been rendered");
   return (
     <div className={styles.users}>
       <Pagination

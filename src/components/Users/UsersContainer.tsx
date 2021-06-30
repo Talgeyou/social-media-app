@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import {
   followUserThunkCreator,
@@ -18,7 +18,7 @@ import {
   getUsers,
 } from "../../redux/users-selectors";
 
-interface UsersContainerProps {
+interface Props {
   users: Array<any>;
   totalCount: number;
   pageSize: number;
@@ -30,33 +30,32 @@ interface UsersContainerProps {
   unfollowUser: (userId: number) => void;
 }
 
-class UsersContainer extends React.Component<UsersContainerProps> {
-  componentDidMount() {
-    this.props.getUsers(this.props.currentPage, this.props.pageSize);
-  }
+export const UsersContainer = (props: Props) => {
+  useEffect(() => {
+    props.getUsers(props.currentPage, props.pageSize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.currentPage, props.pageSize]);
 
-  handleChangePage = (pageNumber: number, pageSize?: number) => {
-    this.props.getUsers(pageNumber, pageSize ? pageSize : this.props.pageSize);
+  const handleChangePage = (pageNumber: number, pageSize?: number) => {
+    props.getUsers(pageNumber, pageSize ? pageSize : props.pageSize);
   };
 
-  render() {
-    return (
-      <Users
-        users={this.props.users}
-        totalCount={this.props.totalCount}
-        pageSize={this.props.pageSize}
-        currentPage={this.props.currentPage}
-        isFetching={this.props.isFetching}
-        followingInProgress={this.props.followingInProgress}
-        changePage={this.handleChangePage}
-        followUser={this.props.followUser}
-        unfollowUser={this.props.unfollowUser}
-      >
-        {this.props.isFetching ? <Preloader /> : ""}
-      </Users>
-    );
-  }
-}
+  return (
+    <Users
+      users={props.users}
+      totalCount={props.totalCount}
+      pageSize={props.pageSize}
+      currentPage={props.currentPage}
+      isFetching={props.isFetching}
+      followingInProgress={props.followingInProgress}
+      changePage={handleChangePage}
+      followUser={props.followUser}
+      unfollowUser={props.unfollowUser}
+    >
+      {props.isFetching ? <Preloader /> : ""}
+    </Users>
+  );
+};
 
 const mapStateToProps = (state: any) => {
   return {
