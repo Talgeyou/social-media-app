@@ -1,7 +1,8 @@
 import styles from "./Login.module.scss";
 import { Typography } from "antd";
 import LoginForm from "./LoginForm/LoginForm";
-import { Redirect, withRouter } from "react-router-dom";
+
+import { Redirect } from "react-router-dom";
 import { getAuthUserId } from "../../redux/auth-selectors";
 import { connect } from "react-redux";
 
